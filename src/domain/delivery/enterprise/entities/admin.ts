@@ -4,6 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 export interface AdminProps {
   email: string
   password: string
+  name: string
 }
 
 export class Admin extends Entity<AdminProps> {
@@ -13,6 +14,10 @@ export class Admin extends Entity<AdminProps> {
 
   get password() {
     return this.props.password
+  }
+
+  get name() {
+    return this.props.name
   }
 
   static create(props: AdminProps, id?: UniqueEntityID) {
