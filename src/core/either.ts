@@ -41,3 +41,9 @@ export const left = <L, R>(value: L): Either<L, R> => {
 export const right = <L, R>(value: R): Either<L, R> => {
   return new Right(value)
 }
+
+export function assertRight<L, R>(result: Either<L, R>): asserts result is Right<L, R> {
+  if (result.isLeft()) {
+    throw new Error(`Expected Right, but got Left: ${JSON.stringify(result.value)}`)
+  }
+}

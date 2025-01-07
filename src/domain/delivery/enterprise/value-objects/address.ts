@@ -1,35 +1,33 @@
-import { ValueObject } from '@/core/entities/value-object'
-
-interface AddressProps {
+export interface AddressProps {
   state: string
   city: string
   zipCode: string
   streetAddress: string
   neighborhood: string
+  latitude: number
+  longitude: number
 }
 
-export class Address extends ValueObject<AddressProps> {
-  get state() {
-    return this.props.state
+export class Address {
+  public readonly state: string
+  public readonly city: string
+  public readonly zipCode: string
+  public readonly streetAddress: string
+  public readonly neighborhood: string
+  public readonly latitude: number
+  public readonly longitude: number
+
+  private constructor(props: AddressProps) {
+    this.state = props.state
+    this.city = props.city
+    this.zipCode = props.zipCode
+    this.streetAddress = props.streetAddress
+    this.neighborhood = props.neighborhood
+    this.latitude = props.latitude
+    this.longitude = props.longitude
   }
 
-  get city() {
-    return this.props.city
-  }
-
-  get zipCode() {
-    return this.props.zipCode
-  }
-
-  get streetAddress() {
-    return this.props.streetAddress
-  }
-
-  get neighborhood() {
-    return this.props.neighborhood
-  }
-
-  static create(props: AddressProps) {
+  static create(props: AddressProps): Address {
     return new Address(props)
   }
 }

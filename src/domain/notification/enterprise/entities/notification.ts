@@ -1,11 +1,13 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
+import { TrackingNumber } from '@/domain/delivery/enterprise/value-objects/tracking-number'
 
 export interface NotificationProps {
   recipientId: UniqueEntityID
+  parcelId: UniqueEntityID
+  trackingNumber: TrackingNumber
   title: string
-  content: string
   readAt?: Date | null
   createdAt: Date
 }
@@ -14,12 +16,16 @@ export class Notification extends Entity<NotificationProps> {
     return this.props.recipientId
   }
 
-  get title() {
-    return this.props.title
+  get parcelId() {
+    return this.props.parcelId
   }
 
-  get content() {
-    return this.props.content
+  get trackingNumber() {
+    return this.props.trackingNumber
+  }
+
+  get title() {
+    return this.props.title
   }
 
   get readAt() {
@@ -34,10 +40,7 @@ export class Notification extends Entity<NotificationProps> {
     this.props.readAt = new Date()
   }
 
-  static create(
-    props: Optional<NotificationProps, 'createdAt'>,
-    id?: UniqueEntityID,
-  ) {
+  static create(props: Optional<NotificationProps, 'createdAt'>, id?: UniqueEntityID) {
     const notification = new Notification(
       {
         ...props,
