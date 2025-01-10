@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Courier {
+  id       String @id @default(uuid())
+  name     String
+  cpf      String @unique
+  email    String @unique
+  password String
+
+  parcels Parcel[]
+
+  @@map("couriers")
+}
+
+model Recipient {
+  id            String  @id @default(uuid())
+  name          String
+  cpf           String  @unique
+  email         String  @unique
+  state         String
+  city          String
+  zipCode       String
+  streetAddress String
+  neighborhood  String
+  latitude      Decimal
+  longitude     Decimal
+
+  parcels Parcel[]
+
+  @@map("recipients")
+}
+
+enum Status {
+  ORDER_CREATED
+  READY_FOR_COLLECT
+  COLLECTED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  RETURNED
+}
+
+model Parcel {
+  id             String          @id @default(uuid())
+  trackingNumber String          @unique
+  currentStatus  Status          @default(ORDER_CREATED)
+  statusHistory  StatusHistory[]
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime?       @updatedAt @map("update_at")
+  recipientId    String          @map("recipient_id")
+  courierId      String?         @map("courier_id")
+
+  recipient Recipient @relation(fields: [recipientId], references: [id])
+  courier   Courier?  @relation(fields: [courierId], references: [id])
+
+  @@map("parcels")
+}
+
+model StatusHistory {
+  parcelId String
+  status   Status
+  date     DateTime @default(now())
+
+  parcel Parcel @relation(fields: [parcelId], references: [id])
+
+  @@id([parcelId, date])
+  @@map("status_history")
+}
