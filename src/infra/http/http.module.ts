@@ -7,10 +7,30 @@ import { AuthenticateCourierController } from './controllers/courier/authenticat
 import { CreateCourierService } from '@/domain/delivery/application/services/courier/create-courier.service'
 import { AuthenticateCourierService } from '@/domain/delivery/application/services/courier/authenticate-courier.service'
 import { CryptographyModule } from '../cryptography/cryptography.module'
+import { AuthenticateAdminController } from './controllers/admin/authenticate-admin.controller'
+import { AuthenticateAdminService } from '@/domain/delivery/application/services/admin/authenticate-admin.service'
+import { DeleteCourierController } from './controllers/courier/delete-courier.controller'
+import { UpdateCourierCredentialsController } from './controllers/courier/update-courier.controller'
+import { DeleteCourierService } from '@/domain/delivery/application/services/courier/delete-courier.service'
+import { UpdateCourierCredentialsService } from '@/domain/delivery/application/services/courier/update-courier-credentials.service'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
-  controllers: [CreateRecipientController, CreateCourierController, AuthenticateCourierController],
-  providers: [CreateRecipientService, CreateCourierService, AuthenticateCourierService],
+  controllers: [
+    AuthenticateAdminController,
+    CreateCourierController,
+    DeleteCourierController,
+    UpdateCourierCredentialsController,
+    AuthenticateCourierController,
+    CreateRecipientController,
+  ],
+  providers: [
+    AuthenticateAdminService,
+    CreateCourierService,
+    DeleteCourierService,
+    UpdateCourierCredentialsService,
+    AuthenticateCourierService,
+    CreateRecipientService,
+  ],
 })
 export class HttpModule {}
