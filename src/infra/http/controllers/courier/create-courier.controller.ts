@@ -9,10 +9,9 @@ import {
 } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-
-import { Public } from '@/infra/auth/public'
 import { CreateCourierService } from '@/domain/delivery/application/services/courier/create-courier.service'
 import { CourierAlreadyExistsError } from '@/core/errors/courier-already-exists-error'
+import { Public } from '@/infra/auth/public'
 
 const createCourierBodySchema = z.object({
   name: z.string(),
@@ -23,7 +22,7 @@ const createCourierBodySchema = z.object({
 
 type CreateCourierBodySchema = z.infer<typeof createCourierBodySchema>
 
-@Controller('/accounts')
+@Controller('/couriers')
 @Public()
 export class CreateCourierController {
   constructor(private createCourier: CreateCourierService) {}

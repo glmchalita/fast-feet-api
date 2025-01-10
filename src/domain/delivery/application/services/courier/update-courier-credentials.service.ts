@@ -28,12 +28,12 @@ export class UpdateCourierCredentialsService {
 
     if (!courier) return left(new ResourceNotFoundError())
 
-    if (password && password !== null) {
+    if (password) {
       const hashedPassword = await this.hashGenerator.hash(password)
       courier.password = hashedPassword
     }
 
-    if (email && email !== null) {
+    if (email) {
       courier.email = email
     }
 

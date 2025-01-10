@@ -1,20 +1,24 @@
 @baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.access_token}}
 
-# @name register_recipient
-POST {{baseUrl}}/recipients
+# @name create_account
+POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "name": "John Doe",
+  "name": "Guilherme Chalita",
   "cpf": "11122233344",
-  "email": "johndoe@example.com",
-  "state": "São Paulo",
-  "city": "São Paulo",
-  "zipCode": "03929000",
-  "streetAddress": "Rua Joaquim Silva Nesto 82",
-  "neighborhood": "Vila Script",
-  "latitude": -27.2092052,
-  "longitude": -49.6401091,
+  "email": "glmchalita@email.com.br",
+  "password": "123456"
 }
 
 ###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "cpf": "11122233344",
+  "password": "123456"
+}

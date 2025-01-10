@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  HttpCode,
   Post,
   UnauthorizedException,
   UsePipes,
@@ -25,6 +26,7 @@ export class AuthenticateCourierController {
   constructor(private authenticateCourier: AuthenticateCourierService) {}
 
   @Post()
+  @HttpCode(201)
   @UsePipes(new ZodValidationPipe(authenticateCourierBodySchema))
   async handle(@Body() body: AuthenticateCourierBodySchema) {
     const { cpf, password } = body
