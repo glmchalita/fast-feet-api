@@ -7,12 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model Admin {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  role     Role   @default(ADMIN)
+}
+
 model Courier {
   id       String @id @default(uuid())
   name     String
   cpf      String @unique
   email    String @unique
   password String
+  role     Role   @default(MEMBER)
 
   parcels Parcel[]
 
