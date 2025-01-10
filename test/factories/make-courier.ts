@@ -7,8 +7,6 @@ export function makeCourier(overwrite: Partial<CourierProps> = {}) {
     cpf: faker.string.numeric(11),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    latitude: faker.location.latitude(),
-    longitude: faker.location.longitude(),
     ...overwrite,
   })
 
