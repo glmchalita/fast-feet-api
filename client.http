@@ -1,0 +1,20 @@
+@baseUrl = http://localhost:3333
+
+# @name register_recipient
+POST {{baseUrl}}/recipients
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "cpf": "11122233344",
+  "email": "johndoe@example.com",
+  "state": "São Paulo",
+  "city": "São Paulo",
+  "zipCode": "03929000",
+  "streetAddress": "Rua Joaquim Silva Nesto 82",
+  "neighborhood": "Vila Script",
+  "latitude": -27.2092052,
+  "longitude": -49.6401091,
+}
+
+###
