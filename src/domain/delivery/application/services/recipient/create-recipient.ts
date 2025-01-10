@@ -2,6 +2,7 @@ import { Recipient } from '@/domain/delivery/enterprise/entities/recipient'
 import { RecipientsRepository } from '../../repositories/recipients-repository'
 import { Either, left, right } from '@/core/either'
 import { RecipientAlreadyExistsError } from '@/core/errors/recipient-already-exists-error'
+import { Injectable } from '@nestjs/common'
 
 interface CreateRecipientServiceRequest {
   name: string
@@ -23,6 +24,7 @@ type CreateRecipientServiceResponse = Either<
   }
 >
 
+@Injectable()
 export class CreateRecipientService {
   constructor(private recipientsRepository: RecipientsRepository) {}
 

@@ -33,8 +33,8 @@ export class InMemoryParcelsRepository implements ParcelsRepository {
     DomainEvents.dispatchEventsForAggregate(parcel.id)
   }
 
-  async findById(parcelId: string): Promise<Parcel | null> {
-    const parcel = this.items.find((item) => item.id.toString() === parcelId)
+  async findById(id: string): Promise<Parcel | null> {
+    const parcel = this.items.find((item) => item.id.toString() === id)
 
     if (!parcel) return null
 

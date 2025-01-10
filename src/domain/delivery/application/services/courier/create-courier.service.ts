@@ -10,8 +10,6 @@ interface CreateCourierServiceRequest {
   cpf: string
   email: string
   password: string
-  latitude: number
-  longitude: number
 }
 
 type CreateCourierServiceResponse = Either<
@@ -33,8 +31,6 @@ export class CreateCourierService {
     cpf,
     email,
     password,
-    latitude,
-    longitude,
   }: CreateCourierServiceRequest): Promise<CreateCourierServiceResponse> {
     const courierWithSameCpf = await this.couriersRepository.findByCpf(cpf)
     if (courierWithSameCpf) {
@@ -53,8 +49,6 @@ export class CreateCourierService {
       cpf,
       email,
       password: hashedPassword,
-      latitude,
-      longitude,
     })
 
     await this.couriersRepository.create(courier)

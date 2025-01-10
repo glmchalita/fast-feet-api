@@ -3,6 +3,7 @@ import { CouriersRepository } from '../../repositories/couriers-repository'
 import { HashComparator } from '../../cryptography/hash-comparator'
 import { Encrypter } from '../../cryptography/encrypter'
 import { WrongCredentialsError } from '@/core/errors/wrong-credentials-error'
+import { Injectable } from '@nestjs/common'
 
 interface AuthenticateCourierServiceRequest {
   cpf: string
@@ -16,6 +17,7 @@ type AuthenticateCourierServiceResponse = Either<
   }
 >
 
+@Injectable()
 export class AuthenticateCourierService {
   constructor(
     private couriersRepository: CouriersRepository,

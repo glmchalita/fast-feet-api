@@ -20,8 +20,6 @@ describe('Create courier', () => {
       cpf: '11122233344',
       email: 'johndoe@example.com',
       password: '123456',
-      latitude: 0,
-      longitude: 0,
     })
 
     expect(result.isRight()).toBe(true)
@@ -34,8 +32,6 @@ describe('Create courier', () => {
       cpf: '11122233344',
       email: 'johndoe@example.com',
       password: '123456',
-      latitude: 0,
-      longitude: 0,
     })
 
     const hashedPassword = await fakeHasher.hash('123456')
@@ -50,8 +46,6 @@ describe('Create courier', () => {
       cpf: '11122233344',
       email: 'johndoe1@example.com',
       password: '123456',
-      latitude: 0,
-      longitude: 0,
     })
 
     const result = await sut.execute({
@@ -59,8 +53,6 @@ describe('Create courier', () => {
       cpf: '11122233344',
       email: 'johndoe2@example.com',
       password: '123456',
-      latitude: 0,
-      longitude: 0,
     })
 
     expect(result.isLeft()).toBe(true)
@@ -73,8 +65,6 @@ describe('Create courier', () => {
       cpf: '11122233355',
       email: 'johndoe1@example.com',
       password: '123456',
-      latitude: 0,
-      longitude: 0,
     })
 
     const result = await sut.execute({
@@ -82,8 +72,6 @@ describe('Create courier', () => {
       cpf: '11122233344',
       email: 'johndoe1@example.com',
       password: '123456',
-      latitude: 0,
-      longitude: 0,
     })
 
     expect(result.isLeft()).toBe(true)

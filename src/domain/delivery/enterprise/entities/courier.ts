@@ -8,8 +8,8 @@ export interface CourierProps {
   vehicle?: Vehicle | null
   email: string
   password: string
-  latitude: number
-  longitude: number
+  latitude?: number | null
+  longitude?: number | null
 }
 
 export class Courier extends Entity<CourierProps> {
@@ -31,6 +31,14 @@ export class Courier extends Entity<CourierProps> {
 
   get password() {
     return this.props.password
+  }
+
+  get latitude() {
+    return this.props.latitude
+  }
+
+  get longitude() {
+    return this.props.longitude
   }
 
   set vehicle(vehicle: Vehicle) {
