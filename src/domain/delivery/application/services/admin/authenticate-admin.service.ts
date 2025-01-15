@@ -41,7 +41,6 @@ export class AuthenticateAdminService {
 
     const accessToken = await this.encrypter.encrypt({
       sub: admin.id.toString(),
-      role: 'ADMIN',
     })
 
     return right({ accessToken })
