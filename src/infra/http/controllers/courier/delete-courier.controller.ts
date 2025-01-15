@@ -1,9 +1,9 @@
 import { BadRequestException, Controller, Delete, HttpCode, Param } from '@nestjs/common'
-import { Public } from '@/infra/auth/public'
 import { DeleteCourierService } from '@/domain/delivery/application/services/courier/delete-courier.service'
+import { Role } from '@/infra/auth/role.decorator'
 
 @Controller('/couriers/:id')
-@Public()
+@Role('ADMIN')
 export class DeleteCourierController {
   constructor(private deleteCourier: DeleteCourierService) {}
 

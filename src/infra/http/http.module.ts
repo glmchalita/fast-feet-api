@@ -10,7 +10,7 @@ import { CryptographyModule } from '../cryptography/cryptography.module'
 import { AuthenticateAdminController } from './controllers/admin/authenticate-admin.controller'
 import { AuthenticateAdminService } from '@/domain/delivery/application/services/admin/authenticate-admin.service'
 import { DeleteCourierController } from './controllers/courier/delete-courier.controller'
-import { UpdateCourierCredentialsController } from './controllers/courier/update-courier.controller'
+import { UpdateCourierCredentialsController } from './controllers/courier/update-courier-credentials.controller'
 import { DeleteCourierService } from '@/domain/delivery/application/services/courier/delete-courier.service'
 import { UpdateCourierCredentialsService } from '@/domain/delivery/application/services/courier/update-courier-credentials.service'
 

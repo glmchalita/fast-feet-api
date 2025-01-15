@@ -7,11 +7,10 @@ import {
   Controller,
   HttpCode,
   Post,
-  UsePipes,
 } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
-import { Public } from '@/infra/auth/public'
+import { Role } from '@/infra/auth/role.decorator'
 
 const createRecipientBodySchema = z.object({
   name: z.string(),
@@ -30,17 +29,18 @@ const createRecipientBodySchema = z.object({
   }),
 })
 
+const bodyValidationPipe = new ZodValidationPipe(createRecipientBodySchema)
+
 type CreateRecipientBodySchema = z.infer<typeof createRecipientBodySchema>
 
 @Controller('/recipients')
-@Public()
+@Role('ADMIN')
 export class CreateRecipientController {
   constructor(private createRecipient: CreateRecipientService) {}
 
   @Post()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createRecipientBodySchema))
-  async handle(@Body() body: CreateRecipientBodySchema) {
+  async handle(@Body(bodyValidationPipe) body: CreateRecipientBodySchema) {
     const {
       name,
       cpf,

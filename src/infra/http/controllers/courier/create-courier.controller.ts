@@ -5,13 +5,12 @@ import {
   Controller,
   HttpCode,
   Post,
-  UsePipes,
 } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { CreateCourierService } from '@/domain/delivery/application/services/courier/create-courier.service'
 import { CourierAlreadyExistsError } from '@/core/errors/courier-already-exists-error'
-import { Public } from '@/infra/auth/public'
+import { Role } from '@/infra/auth/role.decorator'
 
 const createCourierBodySchema = z.object({
   name: z.string(),
@@ -22,15 +21,16 @@ const createCourierBodySchema = z.object({
 
 type CreateCourierBodySchema = z.infer<typeof createCourierBodySchema>
 
+const bodyValidationPipe = new ZodValidationPipe(createCourierBodySchema)
+
 @Controller('/couriers')
-@Public()
+@Role('ADMIN')
 export class CreateCourierController {
   constructor(private createCourier: CreateCourierService) {}
 
   @Post()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createCourierBodySchema))
-  async handle(@Body() body: CreateCourierBodySchema) {
+  async handle(@Body(bodyValidationPipe) body: CreateCourierBodySchema) {
     const { name, cpf, email, password } = body
 
     const result = await this.createCourier.execute({ name, cpf, email, password })
