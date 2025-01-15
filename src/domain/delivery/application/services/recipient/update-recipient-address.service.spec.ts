@@ -1,5 +1,5 @@
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
-import { UpdateRecipientAddressService } from './update-recipient-address'
+import { UpdateRecipientAddressService } from './update-recipient-address.service'
 import { makeRecipient } from 'test/factories/make-recipient'
 
 describe('Update recipient address', () => {

@@ -1,4 +1,4 @@
-import { CreateRecipientService } from './create-recipient'
+import { CreateRecipientService } from './create-recipient.service'
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
 import { RecipientAlreadyExistsError } from '@/core/errors/recipient-already-exists-error'
 

@@ -1,5 +1,5 @@
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
-import { DeleteRecipientService } from './delete-recipient'
+import { DeleteRecipientService } from './delete-recipient.service'
 import { makeRecipient } from 'test/factories/make-recipient'
 
 describe('Delete recipient', () => {

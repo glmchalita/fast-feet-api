@@ -2,6 +2,7 @@ import { Either, left, right } from '@/core/either'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { RecipientsRepository } from '../../repositories/recipients-repository'
 import { Address } from '@/domain/delivery/enterprise/value-objects/address'
+import { Injectable } from '@nestjs/common'
 
 interface UpdateRecipientAddressServiceRequest {
   recipientId: string
@@ -16,6 +17,7 @@ interface UpdateRecipientAddressServiceRequest {
 
 type UpdateRecipientAddressServiceResponse = Either<ResourceNotFoundError, null>
 
+@Injectable()
 export class UpdateRecipientAddressService {
   constructor(private recipientsRepository: RecipientsRepository) {}
 
