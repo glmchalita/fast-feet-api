@@ -1,5 +1,5 @@
 import { RecipientAlreadyExistsError } from '@/core/errors/recipient-already-exists-error'
-import { CreateRecipientService } from '@/domain/delivery/application/services/recipient/create-recipient'
+import { CreateRecipientService } from '@/domain/delivery/application/services/recipient/create-recipient.service'
 import {
   BadRequestException,
   Body,

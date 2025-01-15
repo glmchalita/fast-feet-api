@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { DatabaseModule } from '../database/database.module'
-import { CreateRecipientService } from '@/domain/delivery/application/services/recipient/create-recipient'
+import { CreateRecipientService } from '@/domain/delivery/application/services/recipient/create-recipient.service'
 import { CreateRecipientController } from './controllers/recipients/create-recipient.controller'
 import { CreateCourierController } from './controllers/courier/create-courier.controller'
 import { AuthenticateCourierController } from './controllers/courier/authenticate-courier.controller'
@@ -13,6 +13,10 @@ import { DeleteCourierController } from './controllers/courier/delete-courier.co
 import { UpdateCourierCredentialsController } from './controllers/courier/update-courier-credentials.controller'
 import { DeleteCourierService } from '@/domain/delivery/application/services/courier/delete-courier.service'
 import { UpdateCourierCredentialsService } from '@/domain/delivery/application/services/courier/update-courier-credentials.service'
+import { DeleteRecipientController } from './controllers/recipients/delete-recipient.controller'
+import { UpdateRecipientAddressController } from './controllers/recipients/update-recipient-address.controllet'
+import { DeleteRecipientService } from '@/domain/delivery/application/services/recipient/delete-recipient.service'
+import { UpdateRecipientAddressService } from '@/domain/delivery/application/services/recipient/update-recipient-address.service'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -23,6 +27,8 @@ import { UpdateCourierCredentialsService } from '@/domain/delivery/application/s
     UpdateCourierCredentialsController,
     AuthenticateCourierController,
     CreateRecipientController,
+    DeleteRecipientController,
+    UpdateRecipientAddressController,
   ],
   providers: [
     AuthenticateAdminService,
@@ -31,6 +37,8 @@ import { UpdateCourierCredentialsService } from '@/domain/delivery/application/s
     UpdateCourierCredentialsService,
     AuthenticateCourierService,
     CreateRecipientService,
+    DeleteRecipientService,
+    UpdateRecipientAddressService,
   ],
 })
 export class HttpModule {}
