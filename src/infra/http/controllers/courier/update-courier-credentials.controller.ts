@@ -24,7 +24,6 @@ export class UpdateCourierCredentialsController {
     @Body(bodyValidationPipe) body: UpdateCourierCredentialsBodySchema,
     @Param('id') courierId: string,
   ) {
-    console.log(`BODY: ${body}`)
     const { email, password } = body
 
     const result = await this.updateCourierCredentials.execute({
