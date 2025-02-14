@@ -22,7 +22,7 @@ export class AdminFactory {
   async makePrismaAdmin(data: Partial<AdminProps> = {}): Promise<Admin> {
     const admin = makeAdmin(data)
 
-    await this.prisma.admin.create({
+    await this.prisma.user.create({
       data: PrismaAdminMapper.toPrisma(admin),
     })
 

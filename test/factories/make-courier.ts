@@ -23,7 +23,7 @@ export class CourierFactory {
   async makePrismaCourier(data: Partial<CourierProps> = {}): Promise<Courier> {
     const courier = makeCourier(data)
 
-    await this.prisma.courier.create({
+    await this.prisma.user.create({
       data: PrismaCourierMapper.toPrisma(courier),
     })
 
