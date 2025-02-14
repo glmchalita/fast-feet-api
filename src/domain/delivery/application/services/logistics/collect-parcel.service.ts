@@ -3,6 +3,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { ParcelNotAvailableError } from '@/core/errors/parcel-not-available-error'
 import { CouriersRepository } from '../../repositories/couriers-repository'
 import { ParcelsRepository } from '../../repositories/parcels-repository'
+import { Injectable } from '@nestjs/common'
 
 interface CollectParcelServiceRequest {
   parcelId: string
@@ -11,6 +12,7 @@ interface CollectParcelServiceRequest {
 
 type CollectParcelServiceResponse = Either<ResourceNotFoundError | ParcelNotAvailableError, null>
 
+@Injectable()
 export class CollectParcelService {
   constructor(
     private parcelsRepository: ParcelsRepository,
