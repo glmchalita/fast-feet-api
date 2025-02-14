@@ -15,8 +15,16 @@ export class PrismaParcelsRepository implements ParcelsRepository {
   async create(parcel: Parcel): Promise<void> {
     const data = PrismaParcelMapper.toPrisma(parcel)
 
-    await this.prisma.parcel.create({
+    const createdParcel = await this.prisma.parcel.create({
       data,
+    })
+
+    await this.prisma.statusHistory.create({
+      data: {
+        parcelId: createdParcel.id,
+        status: createdParcel.currentStatus,
+        date: new Date(),
+      },
     })
   }
 
@@ -31,12 +39,31 @@ export class PrismaParcelsRepository implements ParcelsRepository {
   async save(parcel: Parcel): Promise<void> {
     const data = PrismaParcelMapper.toPrisma(parcel)
 
-    await this.prisma.parcel.update({
+    const updatedParcel = await this.prisma.parcel.update({
       where: {
         id: parcel.id.toString(),
       },
       data,
     })
+
+    const lastStatus = await this.prisma.statusHistory.findFirst({
+      where: {
+        parcelId: updatedParcel.id,
+      },
+      orderBy: {
+        date: 'desc',
+      },
+    })
+
+    if (updatedParcel.currentStatus !== lastStatus?.status) {
+      await this.prisma.statusHistory.create({
+        data: {
+          parcelId: updatedParcel.id,
+          status: updatedParcel.currentStatus,
+          date: new Date(),
+        },
+      })
+    }
   }
 
   async findById(id: string): Promise<Parcel | null> {

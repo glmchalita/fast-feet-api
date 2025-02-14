@@ -11,7 +11,7 @@ export class PrismaCouriersRepository implements CouriersRepository {
   async create(courier: Courier): Promise<void> {
     const data = PrismaCourierMapper.toPrisma(courier)
 
-    await this.prisma.courier.create({
+    await this.prisma.user.create({
       data,
     })
   }
@@ -19,7 +19,7 @@ export class PrismaCouriersRepository implements CouriersRepository {
   async delete(courier: Courier): Promise<void> {
     const data = PrismaCourierMapper.toPrisma(courier)
 
-    await this.prisma.courier.delete({
+    await this.prisma.user.delete({
       where: { id: data.id },
     })
   }
@@ -27,7 +27,7 @@ export class PrismaCouriersRepository implements CouriersRepository {
   async save(courier: Courier): Promise<void> {
     const data = PrismaCourierMapper.toPrisma(courier)
 
-    await this.prisma.courier.update({
+    await this.prisma.user.update({
       where: {
         id: courier.id.toString(),
       },
@@ -36,7 +36,7 @@ export class PrismaCouriersRepository implements CouriersRepository {
   }
 
   async findByCpf(cpf: string): Promise<Courier | null> {
-    const courier = await this.prisma.courier.findUnique({
+    const courier = await this.prisma.user.findUnique({
       where: {
         cpf,
       },
@@ -48,7 +48,7 @@ export class PrismaCouriersRepository implements CouriersRepository {
   }
 
   async findByEmail(email: string): Promise<Courier | null> {
-    const courier = await this.prisma.courier.findUnique({
+    const courier = await this.prisma.user.findUnique({
       where: {
         email,
       },
@@ -60,7 +60,7 @@ export class PrismaCouriersRepository implements CouriersRepository {
   }
 
   async findById(id: string): Promise<Courier | null> {
-    const courier = await this.prisma.courier.findUnique({
+    const courier = await this.prisma.user.findUnique({
       where: {
         id,
       },

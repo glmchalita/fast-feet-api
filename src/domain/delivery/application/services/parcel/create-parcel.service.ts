@@ -3,6 +3,7 @@ import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { ParcelsRepository } from '../../repositories/parcels-repository'
 import { RecipientsRepository } from '../../repositories/recipients-repository'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface CreateParcelServiceRequest {
   recipientId: string
@@ -15,6 +16,7 @@ type CreateParcelServiceResponse = Either<
   }
 >
 
+@Injectable()
 export class CreateParcelService {
   constructor(
     private parcelsRepository: ParcelsRepository,

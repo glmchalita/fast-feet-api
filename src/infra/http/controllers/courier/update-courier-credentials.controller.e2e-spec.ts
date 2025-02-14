@@ -33,7 +33,7 @@ describe('Update courier credentials (E2E)', () => {
   test('[PUT] /couriers/:id', async () => {
     const admin = await adminFactory.makePrismaAdmin()
 
-    const acessToken = jwtService.sign({ sub: admin.id.toString() })
+    const accessToken = jwtService.sign({ sub: admin.id.toString() })
 
     const courier = await courierFactory.makePrismaCourier()
 
@@ -41,14 +41,14 @@ describe('Update courier credentials (E2E)', () => {
 
     const response = await request(app.getHttpServer())
       .put(`/couriers/${courierId}`)
-      .set('Authorization', `Bearer ${acessToken}`)
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         email: 'johndoe@example.com',
       })
 
     expect(response.statusCode).toBe(204)
 
-    const courierOnDatabase = await prisma.courier.findUnique({
+    const courierOnDatabase = await prisma.user.findUnique({
       where: {
         email: 'johndoe@example.com',
       },

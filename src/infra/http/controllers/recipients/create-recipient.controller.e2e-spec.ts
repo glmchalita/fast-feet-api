@@ -31,11 +31,11 @@ describe('Create recipient (E2E)', () => {
   test('[POST] /recipients', async () => {
     const admin = await adminFactory.makePrismaAdmin()
 
-    const acessToken = jwtService.sign({ sub: admin.id.toString() })
+    const accessToken = jwtService.sign({ sub: admin.id.toString() })
 
     const response = await request(app.getHttpServer())
       .post('/recipients')
-      .set('Authorization', `Bearer ${acessToken}`)
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         name: 'John Doe',
         cpf: '11122233344',

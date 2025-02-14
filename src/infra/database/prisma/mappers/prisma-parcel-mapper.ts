@@ -36,14 +36,6 @@ export class PrismaParcelMapper {
       courierId: parcel.courierId?.toString(),
       trackingNumber: parcel.trackingNumber.toString(),
       currentStatus: this.toPrismaStatus(parcel.currentStatus),
-      statusHistory: {
-        createMany: {
-          data: parcel.statusHistory.map((history) => ({
-            status: this.toPrismaStatus(history.status),
-            date: history.date.toISOString(),
-          })),
-        },
-      },
       createdAt: parcel.createdAt,
       updatedAt: parcel.updatedAt,
     }

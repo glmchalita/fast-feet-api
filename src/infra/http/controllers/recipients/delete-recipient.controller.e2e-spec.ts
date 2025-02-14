@@ -34,7 +34,7 @@ describe('Delete recipient (E2E)', () => {
   test('[DELETE] /recipients/:id', async () => {
     const admin = await adminFactory.makePrismaAdmin()
 
-    const acessToken = jwtService.sign({ sub: admin.id.toString() })
+    const accessToken = jwtService.sign({ sub: admin.id.toString() })
 
     const recipient = await recipientFactory.makePrismaRecipient()
 
@@ -42,7 +42,7 @@ describe('Delete recipient (E2E)', () => {
 
     const response = await request(app.getHttpServer())
       .delete(`/recipients/${recipientId}`)
-      .set('Authorization', `Bearer ${acessToken}`)
+      .set('Authorization', `Bearer ${accessToken}`)
 
     expect(response.statusCode).toBe(204)
 

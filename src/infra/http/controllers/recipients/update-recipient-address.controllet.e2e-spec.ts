@@ -35,7 +35,7 @@ describe('Update recipient address (E2E)', () => {
   test('[PUT] /recipients/:id', async () => {
     const admin = await adminFactory.makePrismaAdmin()
 
-    const acessToken = jwtService.sign({ sub: admin.id.toString() })
+    const accessToken = jwtService.sign({ sub: admin.id.toString() })
 
     const recipient = await recipientFactory.makePrismaRecipient()
 
@@ -43,7 +43,7 @@ describe('Update recipient address (E2E)', () => {
 
     const response = await request(app.getHttpServer())
       .put(`/recipients/${recipientId}`)
-      .set('Authorization', `Bearer ${acessToken}`)
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         state: 'São Paulo',
         city: 'São Paulo',

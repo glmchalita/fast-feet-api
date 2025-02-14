@@ -31,11 +31,11 @@ describe('Create courier (E2E)', () => {
   test('[POST] /couriers', async () => {
     const admin = await adminFactory.makePrismaAdmin()
 
-    const acessToken = jwtService.sign({ sub: admin.id.toString() })
+    const accessToken = jwtService.sign({ sub: admin.id.toString() })
 
     const response = await request(app.getHttpServer())
       .post('/couriers')
-      .set('Authorization', `Bearer ${acessToken}`)
+      .set('Authorization', `Bearer ${accessToken}`)
       .send({
         name: 'John Doe',
         cpf: '11122233344',
@@ -45,7 +45,7 @@ describe('Create courier (E2E)', () => {
 
     expect(response.statusCode).toBe(201)
 
-    const courierOnDatabase = await prisma.courier.findUnique({
+    const courierOnDatabase = await prisma.user.findUnique({
       where: { email: 'johndoe@example.com' },
     })
 

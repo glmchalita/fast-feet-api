@@ -1,6 +1,7 @@
 import { Either, left, right } from '@/core/either'
 import { ParcelsRepository } from '../../repositories/parcels-repository'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface DeleteParcelServiceRequest {
   parcelId: string
@@ -8,6 +9,7 @@ interface DeleteParcelServiceRequest {
 
 type DeleteParcelServiceResponse = Either<ResourceNotFoundError, null>
 
+@Injectable()
 export class DeleteParcelService {
   constructor(private parcelsRepository: ParcelsRepository) {}
 

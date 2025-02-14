@@ -9,7 +9,7 @@ export class PrismaAdminsRepository implements AdminsRepository {
   constructor(private prisma: PrismaService) {}
 
   async findByEmail(email: string): Promise<Admin | null> {
-    const admin = await this.prisma.admin.findUnique({
+    const admin = await this.prisma.user.findUnique({
       where: {
         email,
       },
