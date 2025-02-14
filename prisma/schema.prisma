@@ -12,25 +12,17 @@ enum Role {
   MEMBER
 }
 
-model Admin {
-  id       String @id @default(uuid())
+model User {
+  id       String  @id @default(uuid())
   name     String
-  email    String @unique
+  email    String  @unique
   password String
-  role     Role   @default(ADMIN)
-}
-
-model Courier {
-  id       String @id @default(uuid())
-  name     String
-  cpf      String @unique
-  email    String @unique
-  password String
-  role     Role   @default(MEMBER)
+  role     Role
+  cpf      String? @unique
 
   parcels Parcel[]
 
-  @@map("couriers")
+  @@map("users")
 }
 
 model Recipient {
@@ -71,7 +63,7 @@ model Parcel {
   courierId      String?         @map("courier_id")
 
   recipient Recipient @relation(fields: [recipientId], references: [id])
-  courier   Courier?  @relation(fields: [courierId], references: [id])
+  user      User?     @relation(fields: [courierId], references: [id])
 
   @@map("parcels")
 }
