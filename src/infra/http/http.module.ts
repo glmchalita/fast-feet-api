@@ -17,6 +17,14 @@ import { DeleteRecipientController } from './controllers/recipients/delete-recip
 import { UpdateRecipientAddressController } from './controllers/recipients/update-recipient-address.controllet'
 import { DeleteRecipientService } from '@/domain/delivery/application/services/recipient/delete-recipient.service'
 import { UpdateRecipientAddressService } from '@/domain/delivery/application/services/recipient/update-recipient-address.service'
+import { CreateParcelController } from './controllers/parcel/create-parcel.controller'
+import { CreateParcelService } from '@/domain/delivery/application/services/parcel/create-parcel.service'
+import { DeleteParcelController } from './controllers/parcel/delete-parcel.controller'
+import { DeleteParcelService } from '@/domain/delivery/application/services/parcel/delete-parcel.service'
+import { UpdateParcelCourierController } from './controllers/parcel/update-parcel-courier.controller'
+import { UpdateParcelCourierService } from '@/domain/delivery/application/services/parcel/update-parcel-courier.service'
+import { CollectParcelController } from './controllers/logistics/collect-parcel.controller'
+import { CollectParcelService } from '@/domain/delivery/application/services/logistics/collect-parcel.service'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -29,6 +37,10 @@ import { UpdateRecipientAddressService } from '@/domain/delivery/application/ser
     CreateRecipientController,
     DeleteRecipientController,
     UpdateRecipientAddressController,
+    CreateParcelController,
+    DeleteParcelController,
+    UpdateParcelCourierController,
+    CollectParcelController,
   ],
   providers: [
     AuthenticateAdminService,
@@ -39,6 +51,10 @@ import { UpdateRecipientAddressService } from '@/domain/delivery/application/ser
     CreateRecipientService,
     DeleteRecipientService,
     UpdateRecipientAddressService,
+    CreateParcelService,
+    DeleteParcelService,
+    UpdateParcelCourierService,
+    CollectParcelService,
   ],
 })
 export class HttpModule {}
