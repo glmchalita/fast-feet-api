@@ -6,9 +6,11 @@ import { InMemoryParcelsRepository } from 'test/repositories/in-memory-parcels-r
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
 import { makeParcel } from 'test/factories/make-parcel'
 import { waitFor } from 'test/utils/wait-for'
+import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
 
 describe('On parcel status update', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
+  let inMemoryParcelAttachmentRepository: InMemoryParcelAttachmentRepository
   let inMemoryParcelsRepository: InMemoryParcelsRepository
   let inMemoryNotificationsRepository: InMemoryNotificationsRepository
   let sendNotificationService: SendNotificationService
@@ -16,7 +18,11 @@ describe('On parcel status update', () => {
 
   beforeEach(() => {
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryParcelsRepository = new InMemoryParcelsRepository(inMemoryRecipientsRepository)
+    inMemoryParcelAttachmentRepository = new InMemoryParcelAttachmentRepository()
+    inMemoryParcelsRepository = new InMemoryParcelsRepository(
+      inMemoryRecipientsRepository,
+      inMemoryParcelAttachmentRepository,
+    )
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
     sendNotificationService = new SendNotificationService(inMemoryNotificationsRepository)
 

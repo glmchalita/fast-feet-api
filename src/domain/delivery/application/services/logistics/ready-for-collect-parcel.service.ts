@@ -2,6 +2,7 @@ import { Either, left, right } from '@/core/either'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { ParcelNotAvailableError } from '@/core/errors/parcel-not-available-error'
 import { ParcelsRepository } from '../../repositories/parcels-repository'
+import { Injectable } from '@nestjs/common'
 
 interface ReadyForCollectParcelServiceRequest {
   parcelId: string
@@ -12,6 +13,7 @@ type ReadyForCollectParcelServiceResponse = Either<
   null
 >
 
+@Injectable()
 export class ReadyForCollectParcelService {
   constructor(private parcelsRepository: ParcelsRepository) {}
 

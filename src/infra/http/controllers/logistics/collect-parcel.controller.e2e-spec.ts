@@ -1,3 +1,4 @@
+import { ParcelsRepository } from '@/domain/delivery/application/repositories/parcels-repository'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
@@ -15,6 +16,7 @@ describe('Collect parcel (E2E)', () => {
   let parcelFactory: ParcelFactory
   let courierFactory: CourierFactory
   let jwtService: JwtService
+  let parcelsRepository: ParcelsRepository
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -28,14 +30,19 @@ describe('Collect parcel (E2E)', () => {
     parcelFactory = moduleRef.get(ParcelFactory)
     courierFactory = moduleRef.get(CourierFactory)
     jwtService = moduleRef.get(JwtService)
+    parcelsRepository = moduleRef.get(ParcelsRepository)
 
     await app.init()
   })
 
-  test('[PATCH] /parcels/:id', async () => {
+  test('[PATCH] /parcels/:id/collect', async () => {
     const parcel = await parcelFactory.makePrismaParcel()
 
     const parcelId = parcel.id.toString()
+
+    parcel.markReadyForCollect()
+
+    await parcelsRepository.save(parcel)
 
     const courier = await courierFactory.makePrismaCourier()
 
@@ -44,7 +51,7 @@ describe('Collect parcel (E2E)', () => {
     const accessToken = jwtService.sign({ sub: courierId })
 
     const response = await request(app.getHttpServer())
-      .patch(`/parcels/${parcelId}`)
+      .patch(`/parcels/${parcelId}/collect`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ courierId })
 
@@ -64,6 +71,9 @@ describe('Collect parcel (E2E)', () => {
       },
       include: {
         parcel: true,
+      },
+      orderBy: {
+        date: 'desc',
       },
     })
 

@@ -3,5 +3,9 @@
   "rules": {
     "no-useless-constructor": "off",
     "no-new": "off"
-  }
+  },
+  "ignorePatterns":[
+    "node_modules",
+    "dist"
+  ]
 }

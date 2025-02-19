@@ -4,15 +4,21 @@ import { assertRight } from '@/core/either'
 import { FetchNearbyDeliveriesService } from './fetch-nearby-deliveries'
 import { makeRecipient } from 'test/factories/make-recipient'
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
+import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
 
 describe('Fetch nearby deliveries', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
+  let inMemoryParcelAttachmentRepository: InMemoryParcelAttachmentRepository
   let inMemoryParcelsRepository: InMemoryParcelsRepository
   let sut: FetchNearbyDeliveriesService
 
   beforeEach(() => {
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryParcelsRepository = new InMemoryParcelsRepository(inMemoryRecipientsRepository)
+    inMemoryParcelAttachmentRepository = new InMemoryParcelAttachmentRepository()
+    inMemoryParcelsRepository = new InMemoryParcelsRepository(
+      inMemoryRecipientsRepository,
+      inMemoryParcelAttachmentRepository,
+    )
     sut = new FetchNearbyDeliveriesService(inMemoryParcelsRepository)
   })
 

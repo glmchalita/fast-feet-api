@@ -4,6 +4,7 @@ import {
   ConflictException,
   Controller,
   HttpCode,
+  NotFoundException,
   Param,
   Patch,
 } from '@nestjs/common'
@@ -12,6 +13,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { Role } from '@/infra/auth/role.decorator'
 import { CollectParcelService } from '@/domain/delivery/application/services/logistics/collect-parcel.service'
 import { ParcelNotAvailableError } from '@/core/errors/parcel-not-available-error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 
 const collectParcelBodySchema = z.object({
   courierId: z.string().uuid(),
@@ -21,7 +23,7 @@ type CollectParcelBodySchema = z.infer<typeof collectParcelBodySchema>
 
 const bodyValidationPipe = new ZodValidationPipe(collectParcelBodySchema)
 
-@Controller('/parcels/:id')
+@Controller('/parcels/:id/collect')
 @Role('MEMBER')
 export class CollectParcelController {
   constructor(private collectParcel: CollectParcelService) {}
@@ -40,6 +42,8 @@ export class CollectParcelController {
       const error = result.value
 
       switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(error.message)
         case ParcelNotAvailableError:
           throw new ConflictException(error.message)
         default:

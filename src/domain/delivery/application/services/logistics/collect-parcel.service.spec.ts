@@ -5,16 +5,22 @@ import { makeCourier } from 'test/factories/make-courier'
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
 import { CollectParcelService } from './collect-parcel.service'
 import { Status } from '@/domain/delivery/enterprise/value-objects/status'
+import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
 
 describe('Collect parcel order', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
+  let inMemoryParcelAttachmentRepository: InMemoryParcelAttachmentRepository
   let inMemoryParcelsRepository: InMemoryParcelsRepository
   let inMemoryCouriersRepository: InMemoryCouriersRepository
   let sut: CollectParcelService
 
   beforeEach(() => {
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryParcelsRepository = new InMemoryParcelsRepository(inMemoryRecipientsRepository)
+    inMemoryParcelAttachmentRepository = new InMemoryParcelAttachmentRepository()
+    inMemoryParcelsRepository = new InMemoryParcelsRepository(
+      inMemoryRecipientsRepository,
+      inMemoryParcelAttachmentRepository,
+    )
     inMemoryCouriersRepository = new InMemoryCouriersRepository()
     sut = new CollectParcelService(inMemoryParcelsRepository, inMemoryCouriersRepository)
   })

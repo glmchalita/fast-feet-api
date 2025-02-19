@@ -7,16 +7,22 @@ import { UpdateParcelCourierService } from './update-parcel-courier.service'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { assertRight } from '@/core/either'
 import { makeCourier } from 'test/factories/make-courier'
+import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
 
 describe('Update parcel courierId', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
+  let inMemoryParcelAttachmentRepository: InMemoryParcelAttachmentRepository
   let inMemoryParcelsRepository: InMemoryParcelsRepository
   let inMemoryCouriersRepository: InMemoryCouriersRepository
   let sut: UpdateParcelCourierService
 
   beforeEach(() => {
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryParcelsRepository = new InMemoryParcelsRepository(inMemoryRecipientsRepository)
+    inMemoryParcelAttachmentRepository = new InMemoryParcelAttachmentRepository()
+    inMemoryParcelsRepository = new InMemoryParcelsRepository(
+      inMemoryRecipientsRepository,
+      inMemoryParcelAttachmentRepository,
+    )
     inMemoryCouriersRepository = new InMemoryCouriersRepository()
     sut = new UpdateParcelCourierService(inMemoryParcelsRepository, inMemoryCouriersRepository)
   })

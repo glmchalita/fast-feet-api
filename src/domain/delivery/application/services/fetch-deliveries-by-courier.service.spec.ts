@@ -5,16 +5,22 @@ import { makeCourier } from 'test/factories/make-courier'
 import { makeParcel } from 'test/factories/make-parcel'
 import { assertRight } from '@/core/either'
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
+import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
 
 describe('Fetch deliveries by courier', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
+  let inMemoryParcelAttachmentRepository: InMemoryParcelAttachmentRepository
   let inMemoryParcelsRepository: InMemoryParcelsRepository
   let inMemoryCouriersRepository: InMemoryCouriersRepository
   let sut: FetchDeliviriesByCourierService
 
   beforeEach(() => {
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryParcelsRepository = new InMemoryParcelsRepository(inMemoryRecipientsRepository)
+    inMemoryParcelAttachmentRepository = new InMemoryParcelAttachmentRepository()
+    inMemoryParcelsRepository = new InMemoryParcelsRepository(
+      inMemoryRecipientsRepository,
+      inMemoryParcelAttachmentRepository,
+    )
     inMemoryCouriersRepository = new InMemoryCouriersRepository()
     sut = new FetchDeliviriesByCourierService(inMemoryParcelsRepository, inMemoryCouriersRepository)
   })

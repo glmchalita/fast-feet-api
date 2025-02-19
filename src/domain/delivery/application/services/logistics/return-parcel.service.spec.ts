@@ -3,15 +3,21 @@ import { makeParcel } from 'test/factories/make-parcel'
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
 import { Status } from '@/domain/delivery/enterprise/value-objects/status'
 import { ReturnParcelService } from './return-parcel.service'
+import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
 
 describe('Return parcel order', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
+  let inMemoryParcelAttachmentRepository: InMemoryParcelAttachmentRepository
   let inMemoryParcelsRepository: InMemoryParcelsRepository
   let sut: ReturnParcelService
 
   beforeEach(() => {
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryParcelsRepository = new InMemoryParcelsRepository(inMemoryRecipientsRepository)
+    inMemoryParcelAttachmentRepository = new InMemoryParcelAttachmentRepository()
+    inMemoryParcelsRepository = new InMemoryParcelsRepository(
+      inMemoryRecipientsRepository,
+      inMemoryParcelAttachmentRepository,
+    )
     sut = new ReturnParcelService(inMemoryParcelsRepository)
   })
 
