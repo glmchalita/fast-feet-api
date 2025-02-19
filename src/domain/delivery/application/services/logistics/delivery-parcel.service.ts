@@ -4,6 +4,7 @@ import { ParcelNotAvailableError } from '@/core/errors/parcel-not-available-erro
 import { ParcelsRepository } from '../../repositories/parcels-repository'
 import { ParcelAttachment } from '@/domain/delivery/enterprise/entities/parcel-attachment'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { Injectable } from '@nestjs/common'
 
 interface DeliveryParcelServiceRequest {
   parcelId: string
@@ -12,6 +13,7 @@ interface DeliveryParcelServiceRequest {
 
 type DeliveryParcelServiceResponse = Either<ResourceNotFoundError | ParcelNotAvailableError, null>
 
+@Injectable()
 export class DeliveryParcelService {
   constructor(private parcelsRepository: ParcelsRepository) {}
 
@@ -23,12 +25,12 @@ export class DeliveryParcelService {
 
     if (!parcel) return left(new ResourceNotFoundError())
 
-    const attachment = ParcelAttachment.create({
+    const parcelAttachment = ParcelAttachment.create({
       parcelId: parcel.id,
       attachmentId: new UniqueEntityID(attachmentId),
     })
 
-    parcel.attachment = attachment
+    parcel.attachment = parcelAttachment
 
     const result = parcel.markDelivered()
 

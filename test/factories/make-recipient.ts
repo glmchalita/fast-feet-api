@@ -11,9 +11,9 @@ type PartialRecipientProps = {
 
 export function makeRecipient(overwrite: PartialRecipientProps = {}) {
   const recipient = Recipient.create({
-    name: faker.person.firstName(),
-    cpf: faker.string.numeric(11),
-    email: faker.internet.email(),
+    name: overwrite.name ?? faker.person.firstName(),
+    cpf: overwrite.cpf ?? faker.string.numeric(11),
+    email: overwrite.email ?? faker.internet.email(),
     address: {
       state: faker.location.state(),
       city: faker.location.city(),
@@ -33,7 +33,7 @@ export function makeRecipient(overwrite: PartialRecipientProps = {}) {
 export class RecipientFactory {
   constructor(private prisma: PrismaService) {}
 
-  async makePrismaRecipient(data: Partial<RecipientProps> = {}): Promise<Recipient> {
+  async makePrismaRecipient(data: PartialRecipientProps = {}): Promise<Recipient> {
     const recipient = makeRecipient(data)
 
     await this.prisma.recipient.create({

@@ -7,11 +7,15 @@ import {
 import { getDistanceBetweenCoordinates } from '@/domain/delivery/application/utils/coordinates-calc'
 import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { InMemoryRecipientsRepository } from './in-memory-recipients-repository'
+import { ParcelAttachmentRepository } from '@/domain/delivery/application/repositories/parcel-attachment-repository'
 
 export class InMemoryParcelsRepository implements ParcelsRepository {
   public items: Parcel[] = []
 
-  constructor(private recipientsRepository: InMemoryRecipientsRepository) {}
+  constructor(
+    private recipientsRepository: InMemoryRecipientsRepository,
+    private parcelAttachmentRepository: ParcelAttachmentRepository,
+  ) {}
 
   async create(parcel: Parcel) {
     this.items.push(parcel)
@@ -29,6 +33,10 @@ export class InMemoryParcelsRepository implements ParcelsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === parcel.id)
 
     this.items[itemIndex] = parcel
+
+    if (parcel.attachment) {
+      await this.parcelAttachmentRepository.create(parcel.attachment)
+    }
 
     DomainEvents.dispatchEventsForAggregate(parcel.id)
   }

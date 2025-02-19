@@ -36,6 +36,14 @@ export class ParcelFactory {
       data: PrismaParcelMapper.toPrisma(parcel),
     })
 
+    await this.prisma.statusHistory.create({
+      data: {
+        parcelId: parcel.id.toString(),
+        status: 'ORDER_CREATED',
+        date: new Date(),
+      },
+    })
+
     return parcel
   }
 }

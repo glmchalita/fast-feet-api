@@ -8,6 +8,10 @@ import { ParcelsRepository } from '@/domain/delivery/application/repositories/pa
 import { PrismaParcelsRepository } from './prisma/repositories/prisma-parcels-repository'
 import { AdminsRepository } from '@/domain/delivery/application/repositories/admin-repository'
 import { PrismaAdminsRepository } from './prisma/repositories/prisma-admins-repository'
+import { AttachmentsRepository } from '@/domain/delivery/application/repositories/attachments-repository'
+import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attachments-repository'
+import { ParcelAttachmentRepository } from '@/domain/delivery/application/repositories/parcel-attachment-repository'
+import { PrismaParcelAttachmentRepository } from './prisma/repositories/prisma-parcel-attachments-repository'
 
 @Module({
   providers: [
@@ -28,6 +32,14 @@ import { PrismaAdminsRepository } from './prisma/repositories/prisma-admins-repo
       provide: ParcelsRepository,
       useClass: PrismaParcelsRepository,
     },
+    {
+      provide: AttachmentsRepository,
+      useClass: PrismaAttachmentsRepository,
+    },
+    {
+      provide: ParcelAttachmentRepository,
+      useClass: PrismaParcelAttachmentRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -35,6 +47,8 @@ import { PrismaAdminsRepository } from './prisma/repositories/prisma-admins-repo
     CouriersRepository,
     RecipientsRepository,
     ParcelsRepository,
+    AttachmentsRepository,
+    ParcelAttachmentRepository,
   ],
 })
 export class DatabaseModule {}

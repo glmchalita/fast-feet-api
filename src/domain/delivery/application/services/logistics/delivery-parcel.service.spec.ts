@@ -4,15 +4,21 @@ import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipi
 import { DeliveryParcelService } from './delivery-parcel.service'
 import { Status } from '@/domain/delivery/enterprise/value-objects/status'
 import { makeParcelAttachment } from 'test/factories/make-parcel-attachment'
+import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
 
 describe('Delivery parcel order', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
+  let inMemoryParcelAttachmentRepository: InMemoryParcelAttachmentRepository
   let inMemoryParcelsRepository: InMemoryParcelsRepository
   let sut: DeliveryParcelService
 
   beforeEach(() => {
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryParcelsRepository = new InMemoryParcelsRepository(inMemoryRecipientsRepository)
+    inMemoryParcelAttachmentRepository = new InMemoryParcelAttachmentRepository()
+    inMemoryParcelsRepository = new InMemoryParcelsRepository(
+      inMemoryRecipientsRepository,
+      inMemoryParcelAttachmentRepository,
+    )
     sut = new DeliveryParcelService(inMemoryParcelsRepository)
   })
 
@@ -44,5 +50,13 @@ describe('Delivery parcel order', () => {
       expect.objectContaining({ status: Status.OUT_FOR_DELIVERY }),
       expect.objectContaining({ status: Status.DELIVERED }),
     ])
+    expect(inMemoryParcelAttachmentRepository.items).toHaveLength(1)
+    expect(inMemoryParcelAttachmentRepository.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attachmentId: attachment.id,
+        }),
+      ]),
+    )
   })
 })

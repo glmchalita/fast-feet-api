@@ -25,9 +25,20 @@ import { UpdateParcelCourierController } from './controllers/parcel/update-parce
 import { UpdateParcelCourierService } from '@/domain/delivery/application/services/parcel/update-parcel-courier.service'
 import { CollectParcelController } from './controllers/logistics/collect-parcel.controller'
 import { CollectParcelService } from '@/domain/delivery/application/services/logistics/collect-parcel.service'
+import { ReadyForCollectParcelController } from './controllers/logistics/ready-for-collect-parcel.controller'
+import { ReadyForCollectParcelService } from '@/domain/delivery/application/services/logistics/ready-for-collect-parcel.service'
+import { OutForDeliveryParcelController } from './controllers/logistics/out-for-delivery-parcel.controller'
+import { OutForDeliveryParcelService } from '@/domain/delivery/application/services/logistics/out-for-delivery-parcel.service'
+import { ReturnParcelController } from './controllers/logistics/return-parcel.controller'
+import { ReturnParcelService } from '@/domain/delivery/application/services/logistics/return-parcel.service'
+import { StorageModule } from '../storage/storage.module'
+import { UploadAttachmentService } from '@/domain/delivery/application/services/upload-attachment.service'
+import { UploadeAttachmentController } from './controllers/upload-attachment.controller'
+import { DeliveryParcelController } from './controllers/logistics/delivery-parcel.controller'
+import { DeliveryParcelService } from '@/domain/delivery/application/services/logistics/delivery-parcel.service'
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
+  imports: [DatabaseModule, CryptographyModule, StorageModule],
   controllers: [
     AuthenticateAdminController,
     CreateCourierController,
@@ -40,7 +51,12 @@ import { CollectParcelService } from '@/domain/delivery/application/services/log
     CreateParcelController,
     DeleteParcelController,
     UpdateParcelCourierController,
+    ReadyForCollectParcelController,
     CollectParcelController,
+    OutForDeliveryParcelController,
+    ReturnParcelController,
+    DeliveryParcelController,
+    UploadeAttachmentController,
   ],
   providers: [
     AuthenticateAdminService,
@@ -54,7 +70,12 @@ import { CollectParcelService } from '@/domain/delivery/application/services/log
     CreateParcelService,
     DeleteParcelService,
     UpdateParcelCourierService,
+    ReadyForCollectParcelService,
     CollectParcelService,
+    OutForDeliveryParcelService,
+    ReturnParcelService,
+    DeliveryParcelService,
+    UploadAttachmentService,
   ],
 })
 export class HttpModule {}

@@ -53,14 +53,16 @@ enum Status {
 }
 
 model Parcel {
-  id             String          @id @default(uuid())
-  trackingNumber String          @unique
-  currentStatus  Status          @default(ORDER_CREATED)
-  statusHistory  StatusHistory[]
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime?       @updatedAt @map("update_at")
-  recipientId    String          @map("recipient_id")
-  courierId      String?         @map("courier_id")
+  id             String    @id @default(uuid())
+  trackingNumber String    @unique
+  currentStatus  Status    @default(ORDER_CREATED)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("update_at")
+  recipientId    String    @map("recipient_id")
+  courierId      String?   @map("courier_id")
+
+  statusHistory StatusHistory[]
+  attachment    Attachment[]
 
   recipient Recipient @relation(fields: [recipientId], references: [id])
   user      User?     @relation(fields: [courierId], references: [id])
@@ -77,4 +79,16 @@ model StatusHistory {
 
   @@id([parcelId, date])
   @@map("status_history")
+}
+
+model Attachment {
+  id       String  @id @default(uuid())
+  title    String
+  url      String
+  parcelId String? @map("parcel_id")
+  answerId String? @map("answer_id")
+
+  question Parcel? @relation(fields: [parcelId], references: [id])
+
+  @@map("attachments")
 }

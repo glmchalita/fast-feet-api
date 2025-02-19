@@ -7,10 +7,14 @@ import {
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { PrismaParcelMapper } from '../mappers/prisma-parcel-mapper'
+import { ParcelAttachmentRepository } from '@/domain/delivery/application/repositories/parcel-attachment-repository'
 
 @Injectable()
 export class PrismaParcelsRepository implements ParcelsRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private parcelAttachmentRepository: ParcelAttachmentRepository,
+  ) {}
 
   async create(parcel: Parcel): Promise<void> {
     const data = PrismaParcelMapper.toPrisma(parcel)
@@ -26,6 +30,8 @@ export class PrismaParcelsRepository implements ParcelsRepository {
         date: new Date(),
       },
     })
+
+    console.log('PARCEL REPOSITORY')
   }
 
   async delete(parcel: Parcel): Promise<void> {
@@ -46,16 +52,14 @@ export class PrismaParcelsRepository implements ParcelsRepository {
       data,
     })
 
-    const lastStatus = await this.prisma.statusHistory.findFirst({
+    const statusExists = await this.prisma.statusHistory.findFirst({
       where: {
         parcelId: updatedParcel.id,
-      },
-      orderBy: {
-        date: 'desc',
+        status: updatedParcel.currentStatus,
       },
     })
 
-    if (updatedParcel.currentStatus !== lastStatus?.status) {
+    if (!statusExists) {
       await this.prisma.statusHistory.create({
         data: {
           parcelId: updatedParcel.id,
@@ -63,6 +67,10 @@ export class PrismaParcelsRepository implements ParcelsRepository {
           date: new Date(),
         },
       })
+    }
+
+    if (parcel.attachment) {
+      await this.parcelAttachmentRepository.create(parcel.attachment)
     }
   }
 
