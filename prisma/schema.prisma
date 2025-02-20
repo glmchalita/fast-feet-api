@@ -75,7 +75,7 @@ model StatusHistory {
   status   Status
   date     DateTime @default(now())
 
-  parcel Parcel @relation(fields: [parcelId], references: [id])
+  parcel Parcel @relation(fields: [parcelId], references: [id], onDelete: Cascade)
 
   @@id([parcelId, date])
   @@map("status_history")
