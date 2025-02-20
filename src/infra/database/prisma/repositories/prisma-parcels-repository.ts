@@ -30,8 +30,6 @@ export class PrismaParcelsRepository implements ParcelsRepository {
         date: new Date(),
       },
     })
-
-    console.log('PARCEL REPOSITORY')
   }
 
   async delete(parcel: Parcel): Promise<void> {
@@ -112,10 +110,16 @@ export class PrismaParcelsRepository implements ParcelsRepository {
     { page }: PaginationParams,
   ): Promise<Parcel[]> {
     const parcels = await this.prisma.$queryRaw<Parcel[]>`
-      SELECT * from parcels
-      WHERE ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin( radians( latitude ) ) ) ) <= 10
-      LIMIT 20
-      OFFSET ${(page - 1) * 20}
+    SELECT parcels.* 
+    FROM parcels
+    INNER JOIN recipients ON parcels.recipient_id = recipients.id
+    WHERE ( 6371 * acos( 
+      cos( radians(${latitude}) ) * cos( radians( recipients.latitude ) ) * 
+      cos( radians( recipients.longitude ) - radians(${longitude}) ) + 
+      sin( radians(${latitude}) ) * sin( radians( recipients.latitude ) ) 
+    ) ) <= 10
+    LIMIT 20
+    OFFSET ${(page - 1) * 20}
     `
 
     return parcels
