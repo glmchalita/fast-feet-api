@@ -17,10 +17,13 @@ export class PrismaParcelMapper {
         recipientId: new UniqueEntityID(raw.recipientId),
         trackingNumber: new TrackingNumber(raw.trackingNumber),
         courierId: raw.courierId ? new UniqueEntityID(raw.courierId) : null,
-        currentStatus: this.toDomainStatus(raw.currentStatus),
+        currentStatus: PrismaParcelMapper.toDomainStatus(raw.currentStatus),
         statusHistory: raw.statusHistory.map(
           (history) =>
-            new StatusHistory(this.toDomainStatus(history.status), new Date(history.date)),
+            new StatusHistory(
+              PrismaParcelMapper.toDomainStatus(history.status),
+              new Date(history.date),
+            ),
         ),
         createdAt: new Date(raw.createdAt),
         updatedAt: raw.updatedAt ? new Date(raw.updatedAt) : null,
@@ -35,7 +38,7 @@ export class PrismaParcelMapper {
       recipientId: parcel.recipientId.toString(),
       courierId: parcel.courierId?.toString(),
       trackingNumber: parcel.trackingNumber.toString(),
-      currentStatus: this.toPrismaStatus(parcel.currentStatus),
+      currentStatus: PrismaParcelMapper.toPrismaStatus(parcel.currentStatus),
       createdAt: parcel.createdAt,
       updatedAt: parcel.updatedAt,
     }

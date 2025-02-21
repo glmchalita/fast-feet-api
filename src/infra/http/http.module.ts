@@ -36,6 +36,10 @@ import { UploadAttachmentService } from '@/domain/delivery/application/services/
 import { UploadeAttachmentController } from './controllers/upload-attachment.controller'
 import { DeliveryParcelController } from './controllers/logistics/delivery-parcel.controller'
 import { DeliveryParcelService } from '@/domain/delivery/application/services/logistics/delivery-parcel.service'
+import { FetchNearbyDeliveriesController } from './controllers/fetch-nearby-deliveries.controller'
+import { FetchNearbyDeliveriesService } from '@/domain/delivery/application/services/fetch-nearby-deliveries'
+import { FetchDeliveriesByCourierController } from './controllers/fetch-deliveries-by-courier.controller'
+import { FetchDeliveriesByCourierService } from '@/domain/delivery/application/services/fetch-deliveries-by-courier.service'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -57,6 +61,8 @@ import { DeliveryParcelService } from '@/domain/delivery/application/services/lo
     ReturnParcelController,
     DeliveryParcelController,
     UploadeAttachmentController,
+    FetchNearbyDeliveriesController,
+    FetchDeliveriesByCourierController,
   ],
   providers: [
     AuthenticateAdminService,
@@ -76,6 +82,8 @@ import { DeliveryParcelService } from '@/domain/delivery/application/services/lo
     ReturnParcelService,
     DeliveryParcelService,
     UploadAttachmentService,
+    FetchNearbyDeliveriesService,
+    FetchDeliveriesByCourierService,
   ],
 })
 export class HttpModule {}

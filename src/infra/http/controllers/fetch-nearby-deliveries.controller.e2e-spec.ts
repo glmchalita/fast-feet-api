@@ -39,45 +39,49 @@ describe('Fetch nearby deliveries (E2E)', () => {
 
     const accessToken = jwtService.sign({ sub: courier.id.toString() })
 
-    const recipient = await recipientFactory.makePrismaRecipient({
-      address: { latitude: 0, longitude: 0 },
+    const nearestRecipient1 = await recipientFactory.makePrismaRecipient({
+      address: { latitude: -23.5500029, longitude: -46.5476748 },
     })
 
-    const answer = await answerFactory.makePrismaAnswer({
-      questionId: question.id,
-      authorId: user.id,
+    const nearestRecipient2 = await recipientFactory.makePrismaRecipient({
+      address: { latitude: -23.5509319, longitude: -46.5395832 },
     })
 
-    await Promise.all([
-      answerCommentFactory.makePrismaAnswerComment({
-        authorId: user.id,
-        answerId: answer.id,
-        content: 'Comment 01',
-      }),
-      answerCommentFactory.makePrismaAnswerComment({
-        authorId: user.id,
-        answerId: answer.id,
-        content: 'Comment 02',
-      }),
-    ])
+    const farthestRecipient = await recipientFactory.makePrismaRecipient({
+      address: { latitude: -23.2883361, longitude: -47.2054327 },
+    })
 
-    const answerId = answer.id.toString()
+    const nearestParcel1 = await parcelFactory.makePrismaParcel({
+      recipientId: nearestRecipient1.id,
+      courierId: courier.id,
+    })
+
+    const nearestParcel2 = await parcelFactory.makePrismaParcel({
+      recipientId: nearestRecipient2.id,
+      courierId: courier.id,
+    })
+
+    await parcelFactory.makePrismaParcel({
+      recipientId: farthestRecipient.id,
+      courierId: courier.id,
+    })
 
     const response = await request(app.getHttpServer())
-      .get(`/answers/${answerId}/comments`)
+      .get(`/parcels/nearby`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send()
+      .send({ latitude: -23.5494598, longitude: -46.5416041 })
 
     expect(response.statusCode).toBe(200)
+    expect(response.body.parcels).toHaveLength(2)
     expect(response.body).toEqual({
-      comments: expect.arrayContaining([
+      parcels: expect.arrayContaining([
         expect.objectContaining({
-          content: 'Comment 01',
-          authorName: 'John Doe',
+          id: nearestParcel1.id.toString(),
+          recipient_id: nearestRecipient1.id.toString(),
         }),
         expect.objectContaining({
-          content: 'Comment 01',
-          authorName: 'John Doe',
+          id: nearestParcel2.id.toString(),
+          recipient_id: nearestRecipient2.id.toString(),
         }),
       ]),
     })

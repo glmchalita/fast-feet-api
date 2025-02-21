@@ -30,7 +30,7 @@ type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 
 @Controller('/parcels/nearby')
 @Role('MEMBER')
-export class FetchNerbyDeliveriesController {
+export class FetchNearbyDeliveriesController {
   constructor(private fetchNearbyDeliveries: FetchNearbyDeliveriesService) {}
 
   @Get()
@@ -50,5 +50,9 @@ export class FetchNerbyDeliveriesController {
     if (result.isLeft()) {
       throw new BadRequestException()
     }
+
+    const parcels = result.value.parcels
+
+    return { parcels }
   }
 }

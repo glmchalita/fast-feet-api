@@ -4,20 +4,22 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { ParcelsRepository } from '../repositories/parcels-repository'
 import { CouriersRepository } from '../repositories/couriers-repository'
+import { Injectable } from '@nestjs/common'
 
-interface FetchDeliviriesByCourierServiceRequest {
+interface FetchDeliveriesByCourierServiceRequest {
   courierId: string
   page: number
 }
 
-type FetchDeliviriesByCourierServiceResponse = Either<
+type FetchDeliveriesByCourierServiceResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   {
     parcels: Parcel[]
   }
 >
 
-export class FetchDeliviriesByCourierService {
+@Injectable()
+export class FetchDeliveriesByCourierService {
   constructor(
     private parcelsRepository: ParcelsRepository,
     private couriersRepository: CouriersRepository,
@@ -26,7 +28,7 @@ export class FetchDeliviriesByCourierService {
   async execute({
     courierId,
     page,
-  }: FetchDeliviriesByCourierServiceRequest): Promise<FetchDeliviriesByCourierServiceResponse> {
+  }: FetchDeliveriesByCourierServiceRequest): Promise<FetchDeliveriesByCourierServiceResponse> {
     const courier = await this.couriersRepository.findById(courierId)
 
     if (!courier) return left(new ResourceNotFoundError())

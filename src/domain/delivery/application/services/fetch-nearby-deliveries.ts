@@ -1,6 +1,7 @@
 import { Either, right } from '@/core/either'
 import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { ParcelsRepository } from '../repositories/parcels-repository'
+import { Injectable } from '@nestjs/common'
 
 interface FetchNearbyDeliveriesServiceRequest {
   courierLatitude: number
@@ -15,6 +16,7 @@ type FetchNearbyDeliveriesServiceResponse = Either<
   }
 >
 
+@Injectable()
 export class FetchNearbyDeliveriesService {
   constructor(private parcelsRepository: ParcelsRepository) {}
 
