@@ -1,8 +1,17 @@
-import { BadRequestException, Body, Controller, HttpCode, Param, Put } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Put,
+} from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { Role } from '@/infra/auth/role.decorator'
 import { UpdateParcelCourierService } from '@/domain/delivery/application/services/parcel/update-parcel-courier.service'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 
 const updateParcelCourierBodySchema = z.object({
   courierId: z.string().uuid(),
@@ -31,7 +40,14 @@ export class UpdateParcelCourierController {
     })
 
     if (result.isLeft()) {
-      throw new BadRequestException()
+      const error = result.value
+
+      switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
   }
 }

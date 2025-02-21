@@ -1,8 +1,16 @@
-import { BadRequestException, Body, Controller, HttpCode, Post } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  NotFoundException,
+  Post,
+} from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { Role } from '@/infra/auth/role.decorator'
 import { CreateParcelService } from '@/domain/delivery/application/services/parcel/create-parcel.service'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 
 const createParcelBodySchema = z.object({
   recipientId: z.string().uuid(),
@@ -28,6 +36,8 @@ export class CreateParcelController {
       const error = result.value
 
       switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(error.message)
         default:
           throw new BadRequestException(error.message)
       }

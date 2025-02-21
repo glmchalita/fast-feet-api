@@ -1,8 +1,17 @@
-import { BadRequestException, Body, Controller, HttpCode, Param, Put } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Put,
+} from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { Role } from '@/infra/auth/role.decorator'
 import { UpdateRecipientAddressService } from '@/domain/delivery/application/services/recipient/update-recipient-address.service'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 
 const updateRecipientAddressBodySchema = z.object({
   state: z.string(),
@@ -47,7 +56,14 @@ export class UpdateRecipientAddressController {
     })
 
     if (result.isLeft()) {
-      throw new BadRequestException()
+      const error = result.value
+
+      switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
   }
 }

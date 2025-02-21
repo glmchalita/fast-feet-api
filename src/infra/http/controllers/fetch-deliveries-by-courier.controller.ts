@@ -1,8 +1,19 @@
-import { BadRequestException, Controller, Get, HttpCode, Param, Query } from '@nestjs/common'
+import {
+  BadRequestException,
+  Controller,
+  ForbiddenException,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common'
 import { Role } from '@/infra/auth/role.decorator'
 import { FetchDeliveriesByCourierService } from '@/domain/delivery/application/services/fetch-deliveries-by-courier.service'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { NotAllowedError } from '@/core/errors/not-allowed-error'
 
 const pageQueryParamSchema = z.string().optional().default('1').transform(Number)
 
@@ -24,7 +35,16 @@ export class FetchDeliveriesByCourierController {
     const result = await this.fetchDeliveriesByCourier.execute({ courierId, page })
 
     if (result.isLeft()) {
-      throw new BadRequestException()
+      const error = result.value
+
+      switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(error.message)
+        case NotAllowedError:
+          throw new ForbiddenException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
 
     const parcels = result.value.parcels
