@@ -51,9 +51,3 @@
 - "Out for Delivery" = 
 - "Delivered" = 
 - "Returned" = 
-
-# Todo
-
-- Create Authenticate Admin
-- Create Roles Prop at Courier and Admin
-- Create Attachment Repository
