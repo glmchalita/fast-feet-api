@@ -41,7 +41,7 @@ describe('Fetch deliveries by courier (E2E)', () => {
 
     const accessToken = jwtService.sign({ sub: courier.id.toString() })
 
-    const recipient = await recipientFactory.makePrismaRecipient()
+    const recipient = await recipientFactory.makePrismaRecipient({ name: 'John Doe' })
 
     await Promise.all([
       parcelFactory.makePrismaParcel({
@@ -68,5 +68,13 @@ describe('Fetch deliveries by courier (E2E)', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body.parcels).toHaveLength(4)
+    expect(response.body).toEqual({
+      parcels: expect.arrayContaining([
+        expect.objectContaining({ courierId, recipientName: 'John Doe' }),
+        expect.objectContaining({ courierId, recipientName: 'John Doe' }),
+        expect.objectContaining({ courierId, recipientName: 'John Doe' }),
+        expect.objectContaining({ courierId, recipientName: 'John Doe' }),
+      ]),
+    })
   })
 })

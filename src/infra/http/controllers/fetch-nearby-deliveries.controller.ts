@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { Role } from '@/infra/auth/role.decorator'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 import { FetchNearbyDeliveriesService } from '@/domain/delivery/application/services/fetch-nearby-deliveries'
+import { ParcelWithRecipientPresenter } from '../presenters/parcel-with-recipient-presenter'
 
 const fetchNearbyDeliveriesBodySchema = z.object({
   latitude: z.number().refine((value) => {
@@ -53,6 +54,6 @@ export class FetchNearbyDeliveriesController {
 
     const parcels = result.value.parcels
 
-    return { parcels }
+    return { parcels: parcels.map(ParcelWithRecipientPresenter.toHTTP) }
   }
 }

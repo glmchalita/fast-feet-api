@@ -1,10 +1,10 @@
 import { Either, left, right } from '@/core/either'
-import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { ParcelsRepository } from '../repositories/parcels-repository'
 import { CouriersRepository } from '../repositories/couriers-repository'
 import { Injectable } from '@nestjs/common'
+import { ParcelWithRecipient } from '../../enterprise/value-objects/parcel-with-recipient'
 
 interface FetchDeliveriesByCourierServiceRequest {
   courierId: string
@@ -14,7 +14,7 @@ interface FetchDeliveriesByCourierServiceRequest {
 type FetchDeliveriesByCourierServiceResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   {
-    parcels: Parcel[]
+    parcels: ParcelWithRecipient[]
   }
 >
 
@@ -35,7 +35,9 @@ export class FetchDeliveriesByCourierService {
 
     if (courier.id.toString() !== courierId) return left(new NotAllowedError())
 
-    const parcels = await this.parcelsRepository.findManyByCourierId(courierId, { page })
+    const parcels = await this.parcelsRepository.findManyByCourierIdWithRecipient(courierId, {
+      page,
+    })
 
     return right({ parcels })
   }

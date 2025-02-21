@@ -1,7 +1,7 @@
 import { Either, right } from '@/core/either'
-import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { ParcelsRepository } from '../repositories/parcels-repository'
 import { Injectable } from '@nestjs/common'
+import { ParcelWithRecipient } from '../../enterprise/value-objects/parcel-with-recipient'
 
 interface FetchNearbyDeliveriesServiceRequest {
   courierLatitude: number
@@ -12,7 +12,7 @@ interface FetchNearbyDeliveriesServiceRequest {
 type FetchNearbyDeliveriesServiceResponse = Either<
   null,
   {
-    parcels: Parcel[]
+    parcels: ParcelWithRecipient[]
   }
 >
 
@@ -25,7 +25,7 @@ export class FetchNearbyDeliveriesService {
     courierLongitude,
     page,
   }: FetchNearbyDeliveriesServiceRequest): Promise<FetchNearbyDeliveriesServiceResponse> {
-    const parcels = await this.parcelsRepository.findManyNearby(
+    const parcels = await this.parcelsRepository.findManyNearbyWithRecipient(
       {
         latitude: courierLatitude,
         longitude: courierLongitude,

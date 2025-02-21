@@ -6,6 +6,7 @@ import { makeParcel } from 'test/factories/make-parcel'
 import { assertRight } from '@/core/either'
 import { InMemoryRecipientsRepository } from 'test/repositories/in-memory-recipients-repository'
 import { InMemoryParcelAttachmentRepository } from 'test/repositories/in-memory-parcel-attachment-repository'
+import { makeRecipient } from 'test/factories/make-recipient'
 
 describe('Fetch deliveries by courier', () => {
   let inMemoryRecipientsRepository: InMemoryRecipientsRepository
@@ -32,9 +33,19 @@ describe('Fetch deliveries by courier', () => {
 
     await inMemoryCouriersRepository.create(courier)
 
-    await inMemoryParcelsRepository.create(makeParcel({ courierId: courier.id }))
-    await inMemoryParcelsRepository.create(makeParcel({ courierId: courier.id }))
-    await inMemoryParcelsRepository.create(makeParcel({ courierId: courier.id }))
+    const recipient = makeRecipient()
+
+    await inMemoryRecipientsRepository.create(recipient)
+
+    await inMemoryParcelsRepository.create(
+      makeParcel({ courierId: courier.id, recipientId: recipient.id }),
+    )
+    await inMemoryParcelsRepository.create(
+      makeParcel({ courierId: courier.id, recipientId: recipient.id }),
+    )
+    await inMemoryParcelsRepository.create(
+      makeParcel({ courierId: courier.id, recipientId: recipient.id }),
+    )
 
     const result = await sut.execute({ courierId, page: 1 })
 
@@ -42,9 +53,9 @@ describe('Fetch deliveries by courier', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value.parcels).toEqual([
-      expect.objectContaining({ courierId: courier.id }),
-      expect.objectContaining({ courierId: courier.id }),
-      expect.objectContaining({ courierId: courier.id }),
+      expect.objectContaining({ courierId: courier.id, recipientName: recipient.name }),
+      expect.objectContaining({ courierId: courier.id, recipientName: recipient.name }),
+      expect.objectContaining({ courierId: courier.id, recipientName: recipient.name }),
     ])
   })
 
@@ -55,8 +66,14 @@ describe('Fetch deliveries by courier', () => {
 
     await inMemoryCouriersRepository.create(courier)
 
+    const recipient = makeRecipient()
+
+    await inMemoryRecipientsRepository.create(recipient)
+
     for (let i = 1; i <= 22; i++) {
-      await inMemoryParcelsRepository.create(makeParcel({ courierId: courier.id }))
+      await inMemoryParcelsRepository.create(
+        makeParcel({ courierId: courier.id, recipientId: recipient.id }),
+      )
     }
 
     const result = await sut.execute({ courierId, page: 2 })

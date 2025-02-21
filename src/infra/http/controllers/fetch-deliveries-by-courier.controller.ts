@@ -14,6 +14,7 @@ import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
+import { ParcelWithRecipientPresenter } from '../presenters/parcel-with-recipient-presenter'
 
 const pageQueryParamSchema = z.string().optional().default('1').transform(Number)
 
@@ -49,6 +50,6 @@ export class FetchDeliveriesByCourierController {
 
     const parcels = result.value.parcels
 
-    return { parcels }
+    return { parcels: parcels.map(ParcelWithRecipientPresenter.toHTTP) }
   }
 }

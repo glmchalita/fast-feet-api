@@ -8,6 +8,7 @@ import { getDistanceBetweenCoordinates } from '@/domain/delivery/application/uti
 import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { InMemoryRecipientsRepository } from './in-memory-recipients-repository'
 import { ParcelAttachmentRepository } from '@/domain/delivery/application/repositories/parcel-attachment-repository'
+import { ParcelWithRecipient } from '@/domain/delivery/enterprise/value-objects/parcel-with-recipient'
 
 export class InMemoryParcelsRepository implements ParcelsRepository {
   public items: Parcel[] = []
@@ -76,5 +77,90 @@ export class InMemoryParcelsRepository implements ParcelsRepository {
       })
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice((page - 1) * 20, page * 20)
+  }
+
+  async findManyByCourierIdWithRecipient(
+    courierId: string,
+    { page }: PaginationParams,
+  ): Promise<ParcelWithRecipient[]> {
+    const parcels = this.items
+      .filter((item) => item.courierId?.toString() === courierId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice((page - 1) * 20, page * 20)
+      .map((parcel) => {
+        const recipient = this.recipientsRepository.items.find((item) => {
+          return item.id.equals(parcel.recipientId)
+        })
+
+        if (!recipient) {
+          throw new Error(`Recipient with ID "${parcel.recipientId.toString()}" does not exists.`)
+        }
+
+        return ParcelWithRecipient.create({
+          parcelId: parcel.id,
+          courierId: parcel.courierId,
+          trackingNumber: parcel.trackingNumber,
+          currentStatus: parcel.currentStatus,
+          recipientName: recipient?.name,
+          recipientCpf: recipient?.cpf,
+          recipientState: recipient.address.state,
+          recipientCity: recipient.address.city,
+          recipientZipCode: recipient.address.zipCode,
+          recipientStreetAddress: recipient.address.streetAddress,
+          recipientNeighborhood: recipient.address.neighborhood,
+          createdAt: parcel.createdAt,
+          updatedAt: parcel.updatedAt,
+        })
+      })
+
+    return parcels
+  }
+
+  async findManyNearbyWithRecipient(
+    params: FindManyNearbyParams,
+    { page }: PaginationParams,
+  ): Promise<ParcelWithRecipient[]> {
+    const recipients = this.recipientsRepository.items
+
+    return this.items
+      .filter((item) => {
+        const recipient = recipients.find((recipient) => recipient.id.equals(item.recipientId))
+
+        if (!recipient) throw new Error('No recipients found')
+
+        const distance = getDistanceBetweenCoordinates(
+          { latitude: params.latitude, longitude: params.longitude },
+          { latitude: recipient.address.latitude, longitude: recipient.address.longitude },
+        )
+
+        return distance < 10
+      })
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice((page - 1) * 20, page * 20)
+      .map((parcel) => {
+        const recipient = this.recipientsRepository.items.find((item) => {
+          return item.id.equals(parcel.recipientId)
+        })
+
+        if (!recipient) {
+          throw new Error(`Recipient with ID "${parcel.recipientId.toString()}" does not exists.`)
+        }
+
+        return ParcelWithRecipient.create({
+          parcelId: parcel.id,
+          courierId: parcel.courierId,
+          trackingNumber: parcel.trackingNumber,
+          currentStatus: parcel.currentStatus,
+          recipientName: recipient?.name,
+          recipientCpf: recipient?.cpf,
+          recipientState: recipient.address.state,
+          recipientCity: recipient.address.city,
+          recipientZipCode: recipient.address.zipCode,
+          recipientStreetAddress: recipient.address.streetAddress,
+          recipientNeighborhood: recipient.address.neighborhood,
+          createdAt: parcel.createdAt,
+          updatedAt: parcel.updatedAt,
+        })
+      })
   }
 }

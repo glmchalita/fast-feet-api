@@ -8,6 +8,10 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { Parcel } from '@/domain/delivery/enterprise/entities/parcel'
 import { PrismaParcelMapper } from '../mappers/prisma-parcel-mapper'
 import { ParcelAttachmentRepository } from '@/domain/delivery/application/repositories/parcel-attachment-repository'
+import { ParcelWithRecipient } from '@/domain/delivery/enterprise/value-objects/parcel-with-recipient'
+import { PrismaParcelWithRecipientMapper } from '../mappers/prisma-parcel-with-recipient-mapper'
+import { Status } from '@prisma/client'
+import { Decimal } from '@prisma/client/runtime/library'
 
 @Injectable()
 export class PrismaParcelsRepository implements ParcelsRepository {
@@ -123,5 +127,106 @@ export class PrismaParcelsRepository implements ParcelsRepository {
     `
 
     return parcels
+  }
+
+  async findManyByCourierIdWithRecipient(
+    courierId: string,
+    { page }: PaginationParams,
+  ): Promise<ParcelWithRecipient[]> {
+    const parcels = await this.prisma.parcel.findMany({
+      where: {
+        courierId,
+      },
+      include: {
+        recipient: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    return parcels.map(PrismaParcelWithRecipientMapper.toDomain)
+  }
+
+  async findManyNearbyWithRecipient(
+    { latitude, longitude }: FindManyNearbyParams,
+    { page }: PaginationParams,
+  ): Promise<ParcelWithRecipient[]> {
+    const parcelsRaw = await this.prisma.$queryRaw<
+      Array<{
+        parcelId: string
+        courierId: string | null
+        trackingNumber: string
+        currentStatus: string
+        createdAt: Date
+        updatedAt: Date | null
+        recipientId: string
+        recipientName: string
+        recipientEmail: string
+        recipientCpf: string
+        recipientState: string
+        recipientCity: string
+        recipientZipCode: string
+        recipientStreetAddress: string
+        recipientNeighborhood: string
+        recipientLatitude: Decimal
+        recipientLongitude: Decimal
+      }>
+    >`
+    SELECT 
+      parcels.id as "parcelId",
+      parcels.courier_id as "courierId",
+      parcels.tracking_number as "trackingNumber",
+      parcels.current_status as "currentStatus",
+      parcels.created_at as "createdAt",
+      parcels.updated_at as "updatedAt",
+      recipients.id as "recipientId",
+      recipients.email as "recipientEmail",
+      recipients.name as "recipientName",
+      recipients.cpf as "recipientCpf",
+      recipients.state as "recipientState",
+      recipients.city as "recipientCity",
+      recipients.zip_code as "recipientZipCode",
+      recipients.street_address as "recipientStreetAddress",
+      recipients.neighborhood as "recipientNeighborhood",
+      recipients.latitude as "recipientLatitude",
+      recipients.longitude as "recipientLongitude"
+    FROM parcels
+    INNER JOIN recipients ON parcels.recipient_id = recipients.id
+    WHERE ( 6371 * acos( 
+      cos( radians(${latitude}) ) * cos( radians( recipients.latitude ) ) * 
+      cos( radians( recipients.longitude ) - radians(${longitude}) ) + 
+      sin( radians(${latitude}) ) * sin( radians( recipients.latitude ) ) 
+    ) ) <= 10
+    LIMIT 20
+    OFFSET ${(page - 1) * 20}
+    `
+
+    return parcelsRaw.map((raw) =>
+      PrismaParcelWithRecipientMapper.toDomain({
+        id: raw.parcelId,
+        courierId: raw.courierId,
+        trackingNumber: raw.trackingNumber,
+        currentStatus: raw.currentStatus as Status,
+        createdAt: raw.createdAt,
+        updatedAt: raw.updatedAt,
+        recipientId: raw.recipientId,
+        recipient: {
+          id: raw.recipientId,
+          name: raw.recipientName,
+          email: raw.recipientEmail,
+          cpf: raw.recipientCpf,
+          state: raw.recipientState,
+          city: raw.recipientCity,
+          zipCode: raw.recipientZipCode,
+          streetAddress: raw.recipientStreetAddress,
+          neighborhood: raw.recipientNeighborhood,
+          latitude: raw.recipientLatitude,
+          longitude: raw.recipientLongitude,
+        },
+      }),
+    )
   }
 }

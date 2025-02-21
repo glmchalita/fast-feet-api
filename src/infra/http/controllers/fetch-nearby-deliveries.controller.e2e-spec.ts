@@ -37,13 +37,17 @@ describe('Fetch nearby deliveries (E2E)', () => {
       name: 'John Doe',
     })
 
+    const courierId = courier.id.toString()
+
     const accessToken = jwtService.sign({ sub: courier.id.toString() })
 
     const nearestRecipient1 = await recipientFactory.makePrismaRecipient({
+      name: 'John Doe 1',
       address: { latitude: -23.5500029, longitude: -46.5476748 },
     })
 
     const nearestRecipient2 = await recipientFactory.makePrismaRecipient({
+      name: 'John Doe 2',
       address: { latitude: -23.5509319, longitude: -46.5395832 },
     })
 
@@ -51,20 +55,20 @@ describe('Fetch nearby deliveries (E2E)', () => {
       address: { latitude: -23.2883361, longitude: -47.2054327 },
     })
 
-    const nearestParcel1 = await parcelFactory.makePrismaParcel({
-      recipientId: nearestRecipient1.id,
-      courierId: courier.id,
-    })
-
-    const nearestParcel2 = await parcelFactory.makePrismaParcel({
-      recipientId: nearestRecipient2.id,
-      courierId: courier.id,
-    })
-
-    await parcelFactory.makePrismaParcel({
-      recipientId: farthestRecipient.id,
-      courierId: courier.id,
-    })
+    await Promise.all([
+      parcelFactory.makePrismaParcel({
+        recipientId: nearestRecipient1.id,
+        courierId: courier.id,
+      }),
+      parcelFactory.makePrismaParcel({
+        recipientId: nearestRecipient2.id,
+        courierId: courier.id,
+      }),
+      parcelFactory.makePrismaParcel({
+        recipientId: farthestRecipient.id,
+        courierId: courier.id,
+      }),
+    ])
 
     const response = await request(app.getHttpServer())
       .get(`/parcels/nearby`)
@@ -75,14 +79,8 @@ describe('Fetch nearby deliveries (E2E)', () => {
     expect(response.body.parcels).toHaveLength(2)
     expect(response.body).toEqual({
       parcels: expect.arrayContaining([
-        expect.objectContaining({
-          id: nearestParcel1.id.toString(),
-          recipient_id: nearestRecipient1.id.toString(),
-        }),
-        expect.objectContaining({
-          id: nearestParcel2.id.toString(),
-          recipient_id: nearestRecipient2.id.toString(),
-        }),
+        expect.objectContaining({ courierId, recipientName: 'John Doe 1' }),
+        expect.objectContaining({ courierId, recipientName: 'John Doe 2' }),
       ]),
     })
   })
