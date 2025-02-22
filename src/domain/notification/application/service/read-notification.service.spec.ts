@@ -1,4 +1,4 @@
-import { ReadNotificationUseCase } from './read-notification'
+import { ReadNotificationService } from './read-notification.service'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { makeNotification } from 'test/factories/make-notification'
@@ -6,11 +6,11 @@ import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-not
 
 describe('Read Notification', () => {
   let inMemoryNotificationsRepository: InMemoryNotificationsRepository
-  let sut: ReadNotificationUseCase
+  let sut: ReadNotificationService
 
   beforeEach(() => {
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
-    sut = new ReadNotificationUseCase(inMemoryNotificationsRepository)
+    sut = new ReadNotificationService(inMemoryNotificationsRepository)
   })
 
   it('should be able to read a notification', async () => {

@@ -10,7 +10,6 @@ export function makeNotification(overwrite: Partial<NotificationProps> = {}, id?
   const notification = Notification.create(
     {
       recipientId: new UniqueEntityID(),
-      parcelId: new UniqueEntityID(),
       trackingNumber: new TrackingNumber(),
       title: faker.internet.displayName(),
       ...overwrite,

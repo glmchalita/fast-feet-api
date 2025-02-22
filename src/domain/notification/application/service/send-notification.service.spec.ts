@@ -1,5 +1,5 @@
 import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository'
-import { SendNotificationService } from './send-notification'
+import { SendNotificationService } from './send-notification.service'
 
 describe('Send Notification', () => {
   let inMemoryNotificationsRepository: InMemoryNotificationsRepository
@@ -13,9 +13,8 @@ describe('Send Notification', () => {
   it('should be able to send a notification', async () => {
     const result = await sut.execute({
       recipientId: '1',
-      parcelId: '1',
       trackingNumber: '1',
-      title: 'New notification',
+      title: 'New notification title',
     })
 
     expect(result.isRight()).toBe(true)

@@ -5,7 +5,6 @@ import { TrackingNumber } from '@/domain/delivery/enterprise/value-objects/track
 
 export interface NotificationProps {
   recipientId: UniqueEntityID
-  parcelId: UniqueEntityID
   trackingNumber: TrackingNumber
   title: string
   readAt?: Date | null
@@ -14,10 +13,6 @@ export interface NotificationProps {
 export class Notification extends Entity<NotificationProps> {
   get recipientId() {
     return this.props.recipientId
-  }
-
-  get parcelId() {
-    return this.props.parcelId
   }
 
   get trackingNumber() {

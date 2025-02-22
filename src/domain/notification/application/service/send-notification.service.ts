@@ -7,7 +7,6 @@ import { TrackingNumber } from '@/domain/delivery/enterprise/value-objects/track
 
 export interface SendNotificationServiceRequest {
   recipientId: string
-  parcelId: string
   trackingNumber: string
   title: string
 }
@@ -25,13 +24,11 @@ export class SendNotificationService {
 
   async execute({
     recipientId,
-    parcelId,
     trackingNumber,
     title,
   }: SendNotificationServiceRequest): Promise<SendNotificationServiceResponse> {
     const notification = Notification.create({
       recipientId: new UniqueEntityID(recipientId),
-      parcelId: new UniqueEntityID(parcelId),
       trackingNumber: new TrackingNumber(trackingNumber),
       title,
     })

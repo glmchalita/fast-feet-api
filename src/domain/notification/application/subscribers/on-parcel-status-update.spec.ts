@@ -1,4 +1,4 @@
-import { SendNotificationService } from '../service/send-notification'
+import { SendNotificationService } from '../service/send-notification.service'
 import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository'
 import { MockInstance } from 'vitest'
 import { OnParcelStatusUpdate } from './on-parcel-status-update'

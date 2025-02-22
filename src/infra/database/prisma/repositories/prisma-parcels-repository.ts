@@ -12,6 +12,7 @@ import { ParcelWithRecipient } from '@/domain/delivery/enterprise/value-objects/
 import { PrismaParcelWithRecipientMapper } from '../mappers/prisma-parcel-with-recipient-mapper'
 import { Status } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
+import { DomainEvents } from '@/core/events/domain-events'
 
 @Injectable()
 export class PrismaParcelsRepository implements ParcelsRepository {
@@ -34,6 +35,8 @@ export class PrismaParcelsRepository implements ParcelsRepository {
         date: new Date(),
       },
     })
+
+    DomainEvents.dispatchEventsForAggregate(parcel.id)
   }
 
   async delete(parcel: Parcel): Promise<void> {
@@ -74,6 +77,8 @@ export class PrismaParcelsRepository implements ParcelsRepository {
     if (parcel.attachment) {
       await this.parcelAttachmentRepository.create(parcel.attachment)
     }
+
+    DomainEvents.dispatchEventsForAggregate(parcel.id)
   }
 
   async findById(id: string): Promise<Parcel | null> {

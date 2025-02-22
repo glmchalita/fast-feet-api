@@ -38,7 +38,8 @@ model Recipient {
   latitude      Decimal
   longitude     Decimal
 
-  parcels Parcel[]
+  parcels       Parcel[]
+  notifications Notification[]
 
   @@map("recipients")
 }
@@ -91,4 +92,17 @@ model Attachment {
   question Parcel? @relation(fields: [parcelId], references: [id])
 
   @@map("attachments")
+}
+
+model Notification {
+  id             String    @id @default(uuid())
+  recipientId    String    @map("recipient_id")
+  trackingNumber String    @map("tracking_number")
+  title          String
+  readAt         DateTime? @map("read_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  recipient Recipient @relation(fields: [recipientId], references: [id])
+
+  @@map("notifications")
 }

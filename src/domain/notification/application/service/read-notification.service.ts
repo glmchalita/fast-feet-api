@@ -5,12 +5,12 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { Injectable } from '@nestjs/common'
 
-interface ReadNotificationUseCaseRequest {
+interface ReadNotificationServiceRequest {
   recipientId: string
   notificationId: string
 }
 
-type ReadNotificationUseCaseResponse = Either<
+type ReadNotificationServiceResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   {
     notification: Notification
@@ -18,13 +18,13 @@ type ReadNotificationUseCaseResponse = Either<
 >
 
 @Injectable()
-export class ReadNotificationUseCase {
+export class ReadNotificationService {
   constructor(private notificationsRepository: NotificationsRepository) {}
 
   async execute({
     recipientId,
     notificationId,
-  }: ReadNotificationUseCaseRequest): Promise<ReadNotificationUseCaseResponse> {
+  }: ReadNotificationServiceRequest): Promise<ReadNotificationServiceResponse> {
     const notification = await this.notificationsRepository.findById(notificationId)
 
     if (!notification) return left(new ResourceNotFoundError())
