@@ -13,11 +13,13 @@ import { PrismaParcelWithRecipientMapper } from '../mappers/prisma-parcel-with-r
 import { Status } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
 import { DomainEvents } from '@/core/events/domain-events'
+import { CacheRepository } from '@/infra/cache/cache-repository'
 
 @Injectable()
 export class PrismaParcelsRepository implements ParcelsRepository {
   constructor(
     private prisma: PrismaService,
+    private cache: CacheRepository,
     private parcelAttachmentRepository: ParcelAttachmentRepository,
   ) {}
 
@@ -79,6 +81,8 @@ export class PrismaParcelsRepository implements ParcelsRepository {
     }
 
     DomainEvents.dispatchEventsForAggregate(parcel.id)
+
+    this.cache.delete(`parcels:${data.courierId}:deliveries`)
   }
 
   async findById(id: string): Promise<Parcel | null> {
@@ -138,6 +142,14 @@ export class PrismaParcelsRepository implements ParcelsRepository {
     courierId: string,
     { page }: PaginationParams,
   ): Promise<ParcelWithRecipient[]> {
+    const cacheHit = await this.cache.get(`parcels:${courierId}:deliveries`)
+
+    if (cacheHit) {
+      const cachedData = JSON.parse(cacheHit)
+
+      return cachedData.map(PrismaParcelWithRecipientMapper.toDomain)
+    }
+
     const parcels = await this.prisma.parcel.findMany({
       where: {
         courierId,
@@ -151,6 +163,8 @@ export class PrismaParcelsRepository implements ParcelsRepository {
       take: 20,
       skip: (page - 1) * 20,
     })
+
+    await this.cache.set(`parcels:${courierId}:deliveries`, JSON.stringify(parcels))
 
     return parcels.map(PrismaParcelWithRecipientMapper.toDomain)
   }
