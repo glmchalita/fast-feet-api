@@ -32,4 +32,3 @@
 - Autenticação e Autorização (RBAC)
 - Testes unitários e e2e
 - Integração com serviços externos
-
