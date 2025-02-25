@@ -9,7 +9,6 @@ jobs:
 
     services:
       postgres:
-        container_name: fast-feet-pg
         image: postgres
         ports:
           - 5432:5432
