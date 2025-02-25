@@ -33,13 +33,3 @@
 - Testes unitários e e2e
 - Integração com serviços externos
 
-
-### Application Services Workflow
-
-## Domain Services
-- "Order Created" = create-parcel.service.ts
-- "Ready For Pickup" = ready-for-collect-parcel.service.ts
-- "Collected" = collect-parcel.service.ts
-- "Out for Delivery" = out-for-delivery-parcel.service.ts
-- "Delivered" = delivered-parcel.service.ts
-- "Returned" = returned-parcel.service.ts
