@@ -9,7 +9,7 @@ export class R2Storage implements Uploader {
   private client: S3Client
 
   constructor(private envService: EnvService) {
-    const accountId = envService.get('CLOUDFARE_ACCOUNT_ID')
+    const accountId = envService.get('CLOUDFLARE_ACCOUNT_ID')
     const accessKeyId = envService.get('AWS_ACCESS_KEY_ID')
     const secretAccessKey = envService.get('AWS_SECRET_ACCESS_KEY')
 
