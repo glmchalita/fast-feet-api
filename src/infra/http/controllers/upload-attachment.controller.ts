@@ -16,7 +16,7 @@ import { InvalidAttachmentTypeError } from '@/core/errors/invalid-attachment-typ
 
 @Controller('/attachments')
 @Role('MEMBER')
-export class UploadeAttachmentController {
+export class UploadAttachmentController {
   constructor(private uploadAttachment: UploadAttachmentService) {}
 
   @Post()

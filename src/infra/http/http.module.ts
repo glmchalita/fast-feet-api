@@ -33,7 +33,7 @@ import { ReturnParcelController } from './controllers/logistics/return-parcel.co
 import { ReturnParcelService } from '@/domain/delivery/application/services/logistics/return-parcel.service'
 import { StorageModule } from '../storage/storage.module'
 import { UploadAttachmentService } from '@/domain/delivery/application/services/upload-attachment.service'
-import { UploadeAttachmentController } from './controllers/upload-attachment.controller'
+import { UploadAttachmentController } from './controllers/upload-attachment.controller'
 import { DeliveryParcelController } from './controllers/logistics/delivery-parcel.controller'
 import { DeliveryParcelService } from '@/domain/delivery/application/services/logistics/delivery-parcel.service'
 import { FetchNearbyDeliveriesController } from './controllers/fetch-nearby-deliveries.controller'
@@ -60,7 +60,7 @@ import { FetchDeliveriesByCourierService } from '@/domain/delivery/application/s
     OutForDeliveryParcelController,
     ReturnParcelController,
     DeliveryParcelController,
-    UploadeAttachmentController,
+    UploadAttachmentController,
     FetchNearbyDeliveriesController,
     FetchDeliveriesByCourierController,
   ],
