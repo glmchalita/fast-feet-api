@@ -11,6 +11,7 @@ import {
 import { z } from 'zod'
 import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 import { Role } from '@/infra/auth/role.decorator'
+import { ApiTags } from '@nestjs/swagger'
 
 const createRecipientBodySchema = z.object({
   name: z.string(),
@@ -33,6 +34,7 @@ const bodyValidationPipe = new ZodValidationPipe(createRecipientBodySchema)
 
 type CreateRecipientBodySchema = z.infer<typeof createRecipientBodySchema>
 
+@ApiTags('Recipients')
 @Controller('/recipients')
 @Role('ADMIN')
 export class CreateRecipientController {

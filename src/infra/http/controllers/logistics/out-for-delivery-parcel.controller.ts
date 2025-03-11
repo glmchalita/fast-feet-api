@@ -11,7 +11,9 @@ import { Role } from '@/infra/auth/role.decorator'
 import { OutForDeliveryParcelService } from '@/domain/delivery/application/services/logistics/out-for-delivery-parcel.service'
 import { ParcelNotAvailableError } from '@/core/errors/parcel-not-available-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Logistics')
 @Controller('/parcels/:id/out-for-delivery')
 @Role('MEMBER')
 export class OutForDeliveryParcelController {

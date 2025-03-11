@@ -11,6 +11,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { Role } from '@/infra/auth/role.decorator'
 import { CreateParcelService } from '@/domain/delivery/application/services/parcel/create-parcel.service'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { ApiTags } from '@nestjs/swagger'
 
 const createParcelBodySchema = z.object({
   recipientId: z.string().uuid(),
@@ -20,6 +21,7 @@ type CreateParcelBodySchema = z.infer<typeof createParcelBodySchema>
 
 const bodyValidationPipe = new ZodValidationPipe(createParcelBodySchema)
 
+@ApiTags('Parcels')
 @Controller('/parcels')
 @Role('ADMIN')
 export class CreateParcelController {

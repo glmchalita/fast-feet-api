@@ -9,7 +9,9 @@ import {
 import { Role } from '@/infra/auth/role.decorator'
 import { DeleteParcelService } from '@/domain/delivery/application/services/parcel/delete-parcel.service'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Parcels')
 @Controller('/parcels/:id')
 @Role('ADMIN')
 export class DeleteParcelController {

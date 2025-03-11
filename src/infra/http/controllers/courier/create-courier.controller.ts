@@ -11,6 +11,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { CreateCourierService } from '@/domain/delivery/application/services/courier/create-courier.service'
 import { CourierAlreadyExistsError } from '@/core/errors/courier-already-exists-error'
 import { Role } from '@/infra/auth/role.decorator'
+import { ApiTags } from '@nestjs/swagger'
 
 const createCourierBodySchema = z.object({
   name: z.string(),
@@ -23,6 +24,7 @@ type CreateCourierBodySchema = z.infer<typeof createCourierBodySchema>
 
 const bodyValidationPipe = new ZodValidationPipe(createCourierBodySchema)
 
+@ApiTags('Couriers')
 @Controller('/couriers')
 @Role('ADMIN')
 export class CreateCourierController {

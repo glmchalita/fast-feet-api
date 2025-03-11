@@ -9,7 +9,9 @@ import {
 import { Role } from '@/infra/auth/role.decorator'
 import { DeleteRecipientService } from '@/domain/delivery/application/services/recipient/delete-recipient.service'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Recipients')
 @Controller('/recipients/:id')
 @Role('ADMIN')
 export class DeleteRecipientController {

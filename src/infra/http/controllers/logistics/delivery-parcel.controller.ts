@@ -14,6 +14,7 @@ import { Role } from '@/infra/auth/role.decorator'
 import { ParcelNotAvailableError } from '@/core/errors/parcel-not-available-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { DeliveryParcelService } from '@/domain/delivery/application/services/logistics/delivery-parcel.service'
+import { ApiTags } from '@nestjs/swagger'
 
 const deliveryParcelBodySchema = z.object({
   attachmentId: z.string().uuid(),
@@ -23,6 +24,7 @@ type DeliveryParcelBodySchema = z.infer<typeof deliveryParcelBodySchema>
 
 const bodyValidationPipe = new ZodValidationPipe(deliveryParcelBodySchema)
 
+@ApiTags('Logistics')
 @Controller('/parcels/:id/delivery')
 @Role('MEMBER')
 export class DeliveryParcelController {

@@ -12,6 +12,7 @@ import { z } from 'zod'
 import { Role } from '@/infra/auth/role.decorator'
 import { UpdateRecipientAddressService } from '@/domain/delivery/application/services/recipient/update-recipient-address.service'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { ApiTags } from '@nestjs/swagger'
 
 const updateRecipientAddressBodySchema = z.object({
   state: z.string(),
@@ -31,6 +32,7 @@ const bodyValidationPipe = new ZodValidationPipe(updateRecipientAddressBodySchem
 
 type UpdateRecipientAddressBodySchema = z.infer<typeof updateRecipientAddressBodySchema>
 
+@ApiTags('Recipients')
 @Controller('/recipients/:id')
 @Role('ADMIN')
 export class UpdateRecipientAddressController {

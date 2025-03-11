@@ -6,29 +6,26 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common'
-import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { z } from 'zod'
 import { WrongCredentialsError } from '@/core/errors/wrong-credentials-error'
 import { AuthenticateAdminService } from '@/domain/delivery/application/services/admin/authenticate-admin.service'
 import { Public } from '@/infra/auth/public.decorator'
-
-const authenticateAdminBodySchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-})
-
-const bodyValidationPipe = new ZodValidationPipe(authenticateAdminBodySchema)
-
-type AuthenticateAdminBodySchema = z.infer<typeof authenticateAdminBodySchema>
+import { ApiTags } from '@nestjs/swagger'
+import { ApiAuthenticateAdmin } from '@/infra/swagger/authenticate-admin.swagger'
+import {
+  AuthenticateAdminRequestDto,
+  AuthenticateAdminResponseDto,
+} from '../../dto/authenticate-admin.dto'
 
 @Controller('/sessions/admin')
+@ApiTags('Admin')
 @Public()
 export class AuthenticateAdminController {
   constructor(private authenticateAdmin: AuthenticateAdminService) {}
 
+  @ApiAuthenticateAdmin()
   @Post()
   @HttpCode(201)
-  async handle(@Body(bodyValidationPipe) body: AuthenticateAdminBodySchema) {
+  async handle(@Body() body: AuthenticateAdminRequestDto) {
     const { email, password } = body
 
     const result = await this.authenticateAdmin.execute({
@@ -49,8 +46,6 @@ export class AuthenticateAdminController {
 
     const { accessToken } = result.value
 
-    return {
-      access_token: accessToken,
-    }
+    return new AuthenticateAdminResponseDto(accessToken)
   }
 }

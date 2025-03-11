@@ -12,6 +12,7 @@ import { z } from 'zod'
 import { UpdateCourierCredentialsService } from '@/domain/delivery/application/services/courier/update-courier-credentials.service'
 import { Role } from '@/infra/auth/role.decorator'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
+import { ApiTags } from '@nestjs/swagger'
 
 const updateCourierCredentialsBodySchema = z.object({
   email: z.string().email().optional(),
@@ -22,6 +23,7 @@ const bodyValidationPipe = new ZodValidationPipe(updateCourierCredentialsBodySch
 
 type UpdateCourierCredentialsBodySchema = z.infer<typeof updateCourierCredentialsBodySchema>
 
+@ApiTags('Couriers')
 @Controller('/couriers/:id')
 @Role('ADMIN')
 export class UpdateCourierCredentialsController {
